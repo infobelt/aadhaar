@@ -63,12 +63,12 @@ pipeline {
     }
     post {
         always {
-            slackSend(color: 'danger', message: "Aadhaar :: Build failed (${env.BUILD_URL})")
+            slackSend(color: 'danger', message: "Aadhaar :: Build Success (${env.BUILD_URL})")
             junit '**/surefire-reports/*.xml'
             cleanWs()
         }
         failure {
-            slackSend(color: 'danger', message: "Aadhaar :: Build failed (${env.BUILD_URL})")
+            slackSend(color: 'danger', message: "Aadhaar :: Build Failed (${env.BUILD_URL})")
 
         }
     }
