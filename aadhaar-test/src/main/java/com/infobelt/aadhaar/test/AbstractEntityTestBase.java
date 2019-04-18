@@ -1,6 +1,6 @@
 package com.infobelt.aadhaar.test;
 
-import com.infobelt.aadhaar.data.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.service.AbstractEntityService;
 import lombok.Getter;
 import org.junit.Test;

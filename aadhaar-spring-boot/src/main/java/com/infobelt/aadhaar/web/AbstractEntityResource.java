@@ -1,6 +1,6 @@
 package com.infobelt.aadhaar.web;
 
-import com.infobelt.aadhaar.data.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.service.AbstractEntityService;
 import com.infobelt.aadhaar.utils.HeaderUtil;

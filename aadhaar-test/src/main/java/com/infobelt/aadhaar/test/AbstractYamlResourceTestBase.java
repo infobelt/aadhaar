@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.infobelt.aadhaar.data.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.service.AbstractEntityService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

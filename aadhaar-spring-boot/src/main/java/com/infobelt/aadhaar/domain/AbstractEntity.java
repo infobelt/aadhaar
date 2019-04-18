@@ -1,4 +1,4 @@
-package com.infobelt.aadhaar.data;
+package com.infobelt.aadhaar.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

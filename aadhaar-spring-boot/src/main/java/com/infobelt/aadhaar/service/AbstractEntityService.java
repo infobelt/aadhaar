@@ -1,6 +1,6 @@
 package com.infobelt.aadhaar.service;
 
-import com.infobelt.aadhaar.data.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.query.QueryContextRepository;
 import lombok.extern.slf4j.Slf4j;

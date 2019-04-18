@@ -1,6 +1,6 @@
 package com.infobelt.aadhaar.example.domain;
 
-import com.infobelt.aadhaar.data.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractEntity;
 import lombok.Data;
 
 import javax.persistence.Entity;
