@@ -112,11 +112,11 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         return jpaRepository.count();
     }
 
-    protected void flush() {
+    public void flush() {
         jpaRepository.flush();
     }
 
-    protected void deleteAll() {
+    public void deleteAll() {
         jpaRepository.deleteAll();
     }
 }

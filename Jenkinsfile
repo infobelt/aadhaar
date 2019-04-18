@@ -34,7 +34,7 @@ pipeline {
             steps {
                 container('maven') {
 
-                    slackSend(color: 'green', message: "Aadhaar :: Starting release (${env.BUILD_URL})")
+                    slackSend(color: 'good', message: "Aadhaar :: Starting release (${env.BUILD_URL})")
 
                     // ensure we're not on a detached head
                     sh "git checkout master"
@@ -63,13 +63,14 @@ pipeline {
     }
     post {
         always {
-            slackSend(color: 'danger', message: "Aadhaar :: Build Success (${env.BUILD_URL})")
             junit '**/surefire-reports/*.xml'
             cleanWs()
         }
+        success {
+            slackSend(color: 'danger', message: "Aadhaar :: Build Success (${env.BUILD_URL})")
+        }
         failure {
             slackSend(color: 'danger', message: "Aadhaar :: Build Failed (${env.BUILD_URL})")
-
         }
     }
 }
