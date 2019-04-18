@@ -32,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
 
     private ObjectMapper om = new ObjectMapper(new YAMLFactory());
