@@ -67,7 +67,7 @@ pipeline {
             cleanWs()
         }
         success {
-            slackSend(color: 'danger', message: "Aadhaar :: Build Success (${env.BUILD_URL})")
+            slackSend(color: 'good', message: "Aadhaar :: Build Success (${env.BUILD_URL})")
         }
         failure {
             slackSend(color: 'danger', message: "Aadhaar :: Build Failed (${env.BUILD_URL})")
