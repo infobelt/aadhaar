@@ -1,0 +1,35 @@
+databaseChangeLog:
+- changeSet:
+    id: cca26764-8376-4640-a429-28fc0107aaa8
+    author: pdodds
+    objectQuotingStrategy: LEGACY
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: ID
+            type: BIGINT
+        - column:
+            name: UUID
+            type: VARCHAR2(65 BYTE)
+        - column:
+            name: CREATED_ON
+            type: TIMESTAMP(6)
+        - column:
+            name: UPDATED_ON
+            type: TIMESTAMP(6)
+        - column:
+            name: CREATED_BY
+            type: VARCHAR2(200 BYTE)
+        - column:
+            name: UPDATED_BY
+            type: VARCHAR2(200 BYTE)
+        - column:
+            name: WIDGET_NAME
+            type: VARCHAR2(200 BYTE)
+        tableName: WIDGET
+
