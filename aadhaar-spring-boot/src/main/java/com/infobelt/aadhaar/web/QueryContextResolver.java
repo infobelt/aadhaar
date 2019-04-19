@@ -1,4 +1,4 @@
-package com.infobelt.aadhaar.example.web;
+package com.infobelt.aadhaar.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infobelt.aadhaar.query.*;

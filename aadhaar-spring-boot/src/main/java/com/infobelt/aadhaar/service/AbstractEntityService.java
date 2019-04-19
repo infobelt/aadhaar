@@ -3,6 +3,7 @@ package com.infobelt.aadhaar.service;
 import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.query.QueryContextRepository;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     @Autowired(required = false)
+    @Getter
     EntityAuditor entityAuditor;
 
     @Autowired
@@ -98,6 +100,11 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     public void delete(Long id) {
         log.debug("Request to delete : {}", id);
         jpaRepository.deleteById(id);
+    }
+
+    public void delete(T entity) {
+        log.debug("Request to delete : {}", entity);
+        jpaRepository.delete(entity);
     }
 
     public String getEntityName() {
