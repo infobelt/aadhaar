@@ -77,6 +77,22 @@ public class Widget extends AbstractEntity {
 
 You can see an example of this in our [Example project](aadhaar-example)
 
+If you have a situation where you have named the ID column in your database to be something other than ID, then you would
+need to override that in your domain object (the same applies to naming the table) this is done as shown below:
+
+
+```java
+@Data
+@Entity
+@Table(name="my_widgets")
+@AttributeOverride(name = "id", column = @Column(name = "widget_id"))
+public class Widget extends AbstractEntity {
+
+    private String widgetName;
+
+}
+```
+
 AbstractEntity is core underlying concept, once you have ensured that your domain objects all extend this object and you have
 created standard JpaRepositories for each of your domain objects then you can move on to the next step.
 
@@ -90,10 +106,19 @@ Since our domain object has been extended from AbstractEntity we can not impleme
 AbstractEntityService with the generic of the type, and due to erasure we also need to provide the type itself.
 
 
-    
+```java
+@Service
+public class WidgetService extends AbstractEntityService<Widget> {
 
---- Link to example of service in example
+    @Override
+    protected Class<Widget> getEntityClass() {
+        return Widget.class;
+    }
 
+}
+```
+
+You can see an example of this in our [Example project](aadhaar-example)
 
 
 The service provides all the basic operations as a layer of abstract from the JpaRepository and should be used in preference
@@ -105,8 +130,26 @@ Then we can move on to the web layer.
 AbstractEntityResource
 ----------------------
 
-In order to allow us to handle the   
+In order to allow us to surface the domain object as a standard RESTful resource we will simply need to implement an MVC controller.
+Since our domain object extends AbstractEntity it is easy for us to leverage the AbstractEntityResource object to do this.
 
+This class leverages the AbstractEntityService, so you must create one of these first.
+
+```java
+@RestController
+@RequestMapping("/api/widgets")
+public class WidgetResource extends AbstractEntityResource<Widget> {
+}
+```
+
+This will provide standard REST endpoints for listing, get, update, create and delete.  
+
+**Important Node**
+
+
+It is an important note the default list method (in this case /api/widgets/) will have pagination, sorting and
+filtering built in.  If you application was previously assuming that /api/widgets/ would simply return a list of all
+the objects then you need to change to use /api/widget/list.
 
 License
 =======
