@@ -1,5 +1,6 @@
 package com.infobelt.aadhaar.service;
 
+import com.infobelt.aadhaar.domain.AbstractAssociatedEntity;
 import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.query.QueryContextRepository;
@@ -68,11 +69,22 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         T result = jpaRepository.save(entity);
 
         if (isAuditLogged() && entityAuditor != null) {
-            if (entity.getId() != null && oldValue.isEmpty()) {
-                entityAuditor.audit(result, entity.getId(), AuditEvent.INSERT, result.toString(), "");
 
-            } else if (entity.getId() != null && !result.toString().equals(oldValue)) {
-                entityAuditor.audit(result, entity.getId(), AuditEvent.UPDATE, result.toString(), oldValue);
+            if (entity instanceof AbstractAssociatedEntity) {
+                AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) entity;
+                if (abstractAssociatedEntity.getShContextRowKey() != null) {
+                    entityAuditor.audit(result, abstractAssociatedEntity.getShContextRowKey(), AuditEvent.DISSOCIATE, result.toString(), "");
+
+                } else if (entity.getId() != null && !result.toString().equals(oldValue)) {
+                    entityAuditor.audit(result, abstractAssociatedEntity.getShContextRowKey(), AuditEvent.ASSOCIATE, result.toString(), oldValue);
+                }
+            } else {
+                if (entity.getId() != null && oldValue.isEmpty()) {
+                    entityAuditor.audit(result, entity.getId(), AuditEvent.INSERT, result.toString(), "");
+
+                } else if (entity.getId() != null && !result.toString().equals(oldValue)) {
+                    entityAuditor.audit(result, entity.getId(), AuditEvent.UPDATE, result.toString(), oldValue);
+                }
             }
 
         }
