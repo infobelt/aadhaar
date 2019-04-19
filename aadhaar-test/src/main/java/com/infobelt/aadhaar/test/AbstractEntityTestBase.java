@@ -11,6 +11,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+/**
+ * A very basic test base that performs very basic tests on the JPA layer
+ *
+ * TODO should be moved over to the YAML approach
+ *
+ * @param <T>
+ */
 @Slf4j
 @SpringBootTest
 @RunWith(SpringRunner.class)

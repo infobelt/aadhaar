@@ -13,15 +13,16 @@ Installation
 
 In your Spring Boot application add a dependency on:
 
-        <dependency>
-            <groupId>com.infobelt.aadhaar</groupId>
-            <artifactId>aadhaar-spring-boot</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
+```xml
+<dependency>
+    <groupId>com.infobelt.aadhaar</groupId>
+    <artifactId>aadhaar-spring-boot</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
 
-
-Core Concepts
-=============
+Domain Objects, Services and Web Resources
+==========================================
 
 AbstractEntity
 --------------
@@ -150,6 +151,17 @@ This will provide standard REST endpoints for listing, get, update, create and d
 It is an important note the default list method (in this case /api/widgets/) will have pagination, sorting and
 filtering built in.  If you application was previously assuming that /api/widgets/ would simply return a list of all
 the objects then you need to change to use /api/widget/list.
+
+QueryContext and QueryContextRepository
+---------------------------------------
+
+More soon...
+
+
+Testing
+=======
+
+More soon...
 
 License
 =======

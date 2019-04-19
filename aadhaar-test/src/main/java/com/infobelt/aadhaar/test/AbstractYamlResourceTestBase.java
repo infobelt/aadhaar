@@ -16,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,6 +27,11 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * A standard approach to integration testing the web layer based on the {@link com.infobelt.aadhaar.web.AbstractEntityResource}
+ *
+ * @param <T> The object that we will test
+ */
 @Slf4j
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -47,8 +51,18 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
 
     private Long testId;
 
+    /**
+     * Implementation must provide the class that matches the generic
+     *
+     * @return class to match the generic
+     */
     public abstract Class<T> getEntityClass();
 
+    /**
+     * The base URL that we will use to test the interactions
+     *
+     * @return The base URL
+     */
     public abstract String getBaseUrl();
 
     /**

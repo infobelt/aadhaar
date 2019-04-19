@@ -3,7 +3,7 @@ package com.infobelt.aadhaar.service;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Created by admin on 10/4/2016.
+ * The types of AuditEvent that we raise
  */
 public enum AuditEvent {
 
@@ -43,7 +43,7 @@ public enum AuditEvent {
 
     private String value;
 
-    private AuditEvent(String value) {
+    AuditEvent(String value) {
         this.value = value;
     }
 
