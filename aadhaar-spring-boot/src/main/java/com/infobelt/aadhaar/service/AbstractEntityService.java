@@ -9,7 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -18,10 +21,13 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
 /**
  * An abstract base for services that allows us to service most of the standard requests through a service
  * layer
  */
+@Service
 @Slf4j
 public abstract class AbstractEntityService<T extends AbstractEntity> {
 
@@ -31,6 +37,9 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     @Autowired
     private JpaRepository<T, Long> jpaRepository;
+
+    @Autowired(required = false)
+    private ElasticsearchRepository<T, Long> searchRepository;
 
     private QueryContextRepository<T> queryContextRepository;
 
@@ -42,6 +51,10 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     // Provide access to the log for subclasses
     public Logger log() {
         return this.log;
+    }
+
+    public boolean isSearchIndexed() {
+        return searchRepository != null;
     }
 
     public boolean isAuditLogged() {
@@ -73,6 +86,10 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
             entity.setUpdatedBy(userName);
         }
         T result = jpaRepository.save(entity);
+
+        if (searchRepository != null) {
+            searchRepository.save(entity);
+        }
 
         if (isAuditLogged() && entityAuditor != null) {
 
@@ -118,11 +135,19 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     public void delete(Long id) {
         log.debug("Request to delete : {}", id);
         jpaRepository.deleteById(id);
+
+        if (searchRepository != null) {
+            searchRepository.deleteById(id);
+        }
     }
 
     public void delete(T entity) {
         log.debug("Request to delete : {}", entity);
         jpaRepository.delete(entity);
+
+        if (searchRepository != null) {
+            searchRepository.delete(entity);
+        }
     }
 
     public String getEntityName() {
@@ -143,5 +168,15 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     public void deleteAll() {
         jpaRepository.deleteAll();
+
+        if (searchRepository != null) {
+            searchRepository.deleteAll();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<T> search(String query, Pageable pageable) {
+        log().debug("Request to search for a page of {} with query {}", getEntityPlural(), query);
+        return searchRepository.search(queryStringQuery(query), pageable);
     }
 }
