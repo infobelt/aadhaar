@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /**
  * Base abstract implementation of a domain object that we will use a foundation
- * for all handling of these types of object
+ * for all handling of these types of object.
  */
 @Data
 @MappedSuperclass
