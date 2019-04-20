@@ -6,6 +6,7 @@ import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.query.QueryContextRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,6 +38,11 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
     protected EntityManager em;
 
     protected abstract Class<T> getEntityClass();
+
+    // Provide access to the log for subclasses
+    public Logger log() {
+        return this.log;
+    }
 
     public boolean isAuditLogged() {
         return true;

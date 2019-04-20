@@ -6,6 +6,7 @@ import com.infobelt.aadhaar.service.AbstractEntityService;
 import com.infobelt.aadhaar.utils.HeaderUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,11 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
     @Autowired
     @Getter
     private AbstractEntityService<T> entityService;
+
+    // Provide access to the log for subclasses
+    public Logger log() {
+        return this.log;
+    }
 
     @PostMapping("/")
     public ResponseEntity<T> create(@RequestBody T entity) throws URISyntaxException, IllegalAccessException {
