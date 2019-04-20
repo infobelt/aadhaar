@@ -1,5 +1,14 @@
 databaseChangeLog:
 - changeSet:
+      id: cca26764-8376-4640-a429-28fc0107aaa7
+      author: pdodds
+      changes:
+          - createSequence:
+                cycle: true
+                incrementBy: 1
+                sequenceName: hibernate_sequence
+                startValue: 1
+- changeSet:
     id: cca26764-8376-4640-a429-28fc0107aaa8
     author: pdodds
     objectQuotingStrategy: LEGACY
