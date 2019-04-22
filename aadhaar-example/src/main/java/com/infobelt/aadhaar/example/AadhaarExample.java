@@ -4,10 +4,12 @@ import com.github.vanroy.springboot.autoconfigure.data.jest.ElasticsearchJestAut
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * A basic example application
  */
+@EnableSwagger2
 @EnableWebMvc
 @SpringBootApplication(exclude = ElasticsearchJestAutoConfiguration.class)
 public class AadhaarExample {

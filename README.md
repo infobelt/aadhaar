@@ -152,10 +152,8 @@ It is an important note the default list method (in this case /api/widgets/) wil
 filtering built in.  If you application was previously assuming that /api/widgets/ would simply return a list of all
 the objects then you need to change to use /api/widget/list.
 
-QueryContext and QueryContextRepository
----------------------------------------
-
-More soon...
+Once you have these basics in place it is worth reading the (API documentation)[docs/api.md] to learn what is exposed to the 
+client and how it works.
 
 
 Testing
