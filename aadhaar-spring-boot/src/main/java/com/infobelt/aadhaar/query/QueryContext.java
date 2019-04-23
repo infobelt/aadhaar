@@ -5,9 +5,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.apache.commons.beanutils.BeanUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A context that can be used to refine a query (usually a listing) in a dynamic fashion
@@ -45,5 +49,26 @@ public class QueryContext {
 
     public void applyComplexQueryFilter(QueryComplexFilter complexFilter) {
         queryComplexFilter = complexFilter;
+    }
+
+    /**
+     * Take this context and try and apply to to an object (for query by example approaches)
+     *
+     * @param object the object which we will try and apply the filters and sorts to
+     *
+     * @return the updated object
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public Object applyToObject(Object object) throws InvocationTargetException, IllegalAccessException {
+        Map<String, Object> filters = new HashMap<>();
+        getFilters().forEach(f -> filters.put(f.getColumnName(), f.getValue()));
+
+        // Lets add the sort by and sort dir if we need it
+        getSorts().forEach(f -> filters.put("sortBy", f.getColumnName()));
+        getSorts().forEach(f -> filters.put("sortDir", f.getDirection()).toString());
+
+        BeanUtils.populate(object, filters);
+        return object;
     }
 }
