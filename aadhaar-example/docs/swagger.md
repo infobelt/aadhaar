@@ -17,7 +17,7 @@ Api Documentation
 
 
 ### URI scheme
-*Host* : localhost:57156  
+*Host* : localhost:52101  
 *BasePath* : /
 
 
@@ -33,7 +33,7 @@ Api Documentation
 ## Paths
 
 <a name="createusingpost"></a>
-### create
+### Create a new instance of the resource
 ```
 POST /api/widgets
 ```
@@ -50,11 +50,12 @@ POST /api/widgets
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[Widget](#widget)|
+|**200**|Successfully created the new resource|[Widget](#widget)|
 |**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occured, check the logs for more information|No Content|
 
 
 #### Consumes
@@ -73,7 +74,7 @@ POST /api/widgets
 
 
 <a name="listusingget"></a>
-### list
+### List a page of the resources
 ```
 GET /api/widgets
 ```
@@ -104,10 +105,11 @@ GET /api/widgets
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[Page«Widget»](#45c18d88e0b9f9be269b2a1dc9d28b3e)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|Successfully listed a page the resources|[Page«Widget»](#45c18d88e0b9f9be269b2a1dc9d28b3e)|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|No Content|
 
 
 #### Produces
@@ -121,7 +123,7 @@ GET /api/widgets
 
 
 <a name="updateusingput_1"></a>
-### update
+### Update the given instance (legacy method)
 ```
 PUT /api/widgets
 ```
@@ -141,11 +143,12 @@ operation.deprecated
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[Widget](#widget)|
+|**200**|Successfully updated the resource|[Widget](#widget)|
 |**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|No Content|
 
 
 #### Consumes
@@ -164,7 +167,7 @@ operation.deprecated
 
 
 <a name="searchusingget"></a>
-### search
+### Perform a search
 ```
 GET /api/widgets/_search
 ```
@@ -188,10 +191,11 @@ GET /api/widgets/_search
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[Page«Widget»](#45c18d88e0b9f9be269b2a1dc9d28b3e)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|Successfully searched for the resource|[Page«Widget»](#45c18d88e0b9f9be269b2a1dc9d28b3e)|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|No Content|
 
 
 #### Produces
@@ -205,7 +209,7 @@ GET /api/widgets/_search
 
 
 <a name="oldlistallusingget"></a>
-### oldListAll
+### List all of the resources (legacy)
 ```
 GET /api/widgets/list
 ```
@@ -218,10 +222,11 @@ operation.deprecated
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< [Widget](#widget) > array|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|Successfully listed all the resources|< [Widget](#widget) > array|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|No Content|
 
 
 #### Produces
@@ -235,7 +240,7 @@ operation.deprecated
 
 
 <a name="getusingget"></a>
-### get
+### Get an resource with the provided ID
 ```
 GET /api/widgets/{id}
 ```
@@ -252,10 +257,11 @@ GET /api/widgets/{id}
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[Widget](#widget)|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**200**|Successfully got the resource|[Widget](#widget)|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|No Content|
 
 
 #### Produces
@@ -269,7 +275,7 @@ GET /api/widgets/{id}
 
 
 <a name="updateusingput"></a>
-### update
+### Update the given instance
 ```
 PUT /api/widgets/{id}
 ```
@@ -287,11 +293,12 @@ PUT /api/widgets/{id}
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[Widget](#widget)|
+|**200**|Successfully updated the resource|[Widget](#widget)|
 |**201**|Created|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occured, check the logs for more information|No Content|
 
 
 #### Consumes
@@ -310,7 +317,7 @@ PUT /api/widgets/{id}
 
 
 <a name="deleteusingdelete"></a>
-### delete
+### Delete the resource with the provided ID
 ```
 DELETE /api/widgets/{id}
 ```
@@ -327,10 +334,12 @@ DELETE /api/widgets/{id}
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|No Content|
+|**200**|Successfully deleted the resource|No Content|
 |**204**|No Content|No Content|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
+|**401**|You are not authorized to view the resource|No Content|
+|**403**|Accessing the resource you were trying to reach is forbidden|No Content|
+|**404**|The resource you were trying to reach is not found|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|No Content|
 
 
 #### Produces
@@ -343,8 +352,8 @@ DELETE /api/widgets/{id}
 * widget-resource
 
 
-<a name="errorusingpost"></a>
-### error
+<a name="errorhtmlusingpost"></a>
+### errorHtml
 ```
 POST /error
 ```
@@ -354,7 +363,7 @@ POST /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**201**|Created|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -368,7 +377,7 @@ POST /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags
@@ -376,8 +385,8 @@ POST /error
 * basic-error-controller
 
 
-<a name="errorusingget"></a>
-### error
+<a name="errorhtmlusingget"></a>
+### errorHtml
 ```
 GET /error
 ```
@@ -387,7 +396,7 @@ GET /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
 |**404**|Not Found|No Content|
@@ -395,7 +404,7 @@ GET /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags
@@ -403,8 +412,8 @@ GET /error
 * basic-error-controller
 
 
-<a name="errorusingput"></a>
-### error
+<a name="errorhtmlusingput"></a>
+### errorHtml
 ```
 PUT /error
 ```
@@ -414,7 +423,7 @@ PUT /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**201**|Created|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -428,7 +437,7 @@ PUT /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags
@@ -436,8 +445,8 @@ PUT /error
 * basic-error-controller
 
 
-<a name="errorusingdelete"></a>
-### error
+<a name="errorhtmlusingdelete"></a>
+### errorHtml
 ```
 DELETE /error
 ```
@@ -447,7 +456,7 @@ DELETE /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -455,7 +464,7 @@ DELETE /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags
@@ -463,8 +472,8 @@ DELETE /error
 * basic-error-controller
 
 
-<a name="errorusingpatch"></a>
-### error
+<a name="errorhtmlusingpatch"></a>
+### errorHtml
 ```
 PATCH /error
 ```
@@ -474,7 +483,7 @@ PATCH /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -487,7 +496,7 @@ PATCH /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags
@@ -495,8 +504,8 @@ PATCH /error
 * basic-error-controller
 
 
-<a name="errorusinghead"></a>
-### error
+<a name="errorhtmlusinghead"></a>
+### errorHtml
 ```
 HEAD /error
 ```
@@ -506,7 +515,7 @@ HEAD /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -519,7 +528,7 @@ HEAD /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags
@@ -527,8 +536,8 @@ HEAD /error
 * basic-error-controller
 
 
-<a name="errorusingoptions"></a>
-### error
+<a name="errorhtmlusingoptions"></a>
+### errorHtml
 ```
 OPTIONS /error
 ```
@@ -538,7 +547,7 @@ OPTIONS /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|< string, object > map|
+|**200**|OK|[ModelAndView](#modelandview)|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -551,7 +560,7 @@ OPTIONS /error
 
 #### Produces
 
-* `\*/*`
+* `text/html`
 
 
 #### Tags

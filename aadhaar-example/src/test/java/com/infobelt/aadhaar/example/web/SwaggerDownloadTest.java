@@ -26,7 +26,7 @@ public class SwaggerDownloadTest {
     @Test
     public void getSwagger() throws MalformedURLException {
 
-        Path outputFile = Paths.get("docs/swagger.md");
+        Path outputFile = Paths.get("docs/swagger");
 
         Swagger2MarkupConverter.from(new URL("http://localhost:" + randomServerPort + "/v2/api-docs"))
                 .withConfig(new Swagger2MarkupConfigBuilder()

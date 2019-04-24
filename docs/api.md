@@ -34,3 +34,5 @@ Our REST API is based on standards as much as possible and therefore you have cr
 public class WidgetResource extends AbstractEntityResource<Widget> {
 }
 ```
+
+You can see an example of API that is generated [in this Swaagger Documentation](aadaar-example/docs/swagger.md)
