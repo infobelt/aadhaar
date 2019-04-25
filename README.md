@@ -67,7 +67,8 @@ objects that have not been persisted is in place).
 Your domain object simply needs to contain the fields that are beyond this base, for example:
 
 ```java
-@Data
+@Getter
+@Setter
 @Entity
 public class Widget extends AbstractEntity {
 
