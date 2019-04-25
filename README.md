@@ -84,7 +84,8 @@ need to override that in your domain object (the same applies to naming the tabl
 
 
 ```java
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="my_widgets")
 @AttributeOverride(name = "id", column = @Column(name = "widget_id"))
