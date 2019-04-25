@@ -17,7 +17,7 @@ Api Documentation
 
 
 ### URI scheme
-*Host* : localhost:52101  
+*Host* : localhost:54164  
 *BasePath* : /
 
 
@@ -55,7 +55,7 @@ POST /api/widgets
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occured, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Consumes
@@ -84,19 +84,17 @@ GET /api/widgets
 
 |Type|Name|Schema|
 |---|---|---|
-|**Query**|**The filters to apply**  <br>*optional*|string|
-|**Query**|**The number of entries in a page**  <br>*optional*|integer (int32)|
-|**Query**|**The page number**  <br>*optional*|integer (int32)|
-|**Query**|**The sorts to apply**  <br>*optional*|string|
-|**Query**|**excludes**  <br>*optional*|< string > array(multi)|
+|**Query**|**filter**  <br>*optional*|string|
 |**Query**|**filters[0].columnName**  <br>*optional*|string|
 |**Query**|**filters[0].value**  <br>*optional*|string|
-|**Query**|**includes**  <br>*optional*|< string > array(multi)|
+|**Query**|**page**  <br>*optional*|integer (int32)|
+|**Query**|**pageSize**  <br>*optional*|integer (int32)|
 |**Query**|**queryComplexFilter.field**  <br>*optional*|string|
 |**Query**|**queryComplexFilter.ignoreCase**  <br>*optional*|boolean|
 |**Query**|**queryComplexFilter.logic**  <br>*optional*|enum (and, or)|
 |**Query**|**queryComplexFilter.operator**  <br>*optional*|enum (contains, doesnotcontain, endswith, startswith, eq, neq, gte, gt, lte, lt, isnull, isnotnull, isempty)|
 |**Query**|**queryComplexFilter.value**  <br>*optional*|string|
+|**Query**|**sorts**  <br>*optional*|string|
 |**Query**|**sorts[0].columnName**  <br>*optional*|string|
 |**Query**|**sorts[0].direction**  <br>*optional*|enum (asc, desc)|
 
@@ -109,7 +107,7 @@ GET /api/widgets
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occurred, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Produces
@@ -148,7 +146,7 @@ operation.deprecated
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occurred, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Consumes
@@ -195,7 +193,7 @@ GET /api/widgets/_search
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occurred, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Produces
@@ -226,7 +224,7 @@ operation.deprecated
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occurred, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Produces
@@ -261,7 +259,7 @@ GET /api/widgets/{id}
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occurred, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Produces
@@ -298,7 +296,7 @@ PUT /api/widgets/{id}
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occured, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Consumes
@@ -339,7 +337,7 @@ DELETE /api/widgets/{id}
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
-|**500**|An internal exception has occurred, check the logs for more information|No Content|
+|**500**|An internal exception has occurred, check the logs for more information|[ExceptionReport](#exceptionreport)|
 
 
 #### Produces
@@ -572,6 +570,16 @@ OPTIONS /error
 
 <a name="definitions"></a>
 ## Definitions
+
+<a name="exceptionreport"></a>
+### ExceptionReport
+
+|Name|Schema|
+|---|---|
+|**description**  <br>*optional*|string|
+|**exceptionUuid**  <br>*optional*|string|
+|**message**  <br>*optional*|string|
+
 
 <a name="modelandview"></a>
 ### ModelAndView

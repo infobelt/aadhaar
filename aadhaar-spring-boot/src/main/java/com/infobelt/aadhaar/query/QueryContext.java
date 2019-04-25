@@ -23,28 +23,31 @@ public class QueryContext {
     @Setter(AccessLevel.NONE)
     public final static int DEFAULT_PAGESIZE = 20;
 
-    @ApiModelProperty(name = "The number of entries in a page")
+    @ApiModelProperty(name = "pageSize", reference = "The number of instances of the resource to include in the page")
     private int pageSize = DEFAULT_PAGESIZE;
-
-    @ApiModelProperty(name = "The page number")
+    @ApiModelProperty(name = "page", reference = "The page number that you wish to access")
     private int page = 1;
-
-    @ApiModelProperty(name = "The sorts to apply", reference = "In the form attribute:direction where direction can be asc/desc")
+    @ApiModelProperty(name = "sorts", reference = "Sorts (attribute:direction where direction can be asc/desc)")
     private String sort;
-
-    @ApiModelProperty(name = "The filters to apply", reference = "In the form filter=value")
+    @ApiModelProperty(name = "filter", reference = "The filter to apply (ie. attribute=value)")
     private String filter;
+
     @Setter(AccessLevel.NONE)
+    @ApiModelProperty(hidden = true)
     private List<QuerySort> sorts = new ArrayList<>();
     @Setter(AccessLevel.NONE)
+    @ApiModelProperty(hidden = true)
     private List<QueryFilter> filters = new ArrayList<>();
 
     @Setter(AccessLevel.NONE)
+    @ApiModelProperty(hidden = true)
     private List<String> includes = new ArrayList<>();
     @Setter(AccessLevel.NONE)
+    @ApiModelProperty(hidden = true)
     private List<String> excludes = new ArrayList<>();
 
     @Setter(AccessLevel.NONE)
+    @ApiModelProperty(hidden = true)
     private QueryComplexFilter queryComplexFilter;
 
     public void applyComplexQueryFilter(QueryComplexFilter complexFilter) {
@@ -55,7 +58,6 @@ public class QueryContext {
      * Take this context and try and apply to to an object (for query by example approaches)
      *
      * @param object the object which we will try and apply the filters and sorts to
-     *
      * @return the updated object
      * @throws InvocationTargetException
      * @throws IllegalAccessException

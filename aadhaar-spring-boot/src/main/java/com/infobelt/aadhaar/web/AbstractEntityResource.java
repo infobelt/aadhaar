@@ -65,7 +65,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occured, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     public ResponseEntity<T> create(@RequestBody T entity) throws URISyntaxException {
@@ -86,7 +86,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occured, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     public ResponseEntity<T> update(@RequestBody T entity, @PathVariable Long id) {
@@ -104,7 +104,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     @ApiOperation("Update the given instance (legacy method)")
@@ -119,7 +119,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     @ApiOperation("List a page of the resources")
@@ -137,7 +137,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     public List<T> oldListAll() {
@@ -150,7 +150,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     @ApiOperation("List all of the resources (legacy)")
@@ -167,7 +167,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     public ResponseEntity<T> get(@PathVariable Long id) {
@@ -183,7 +183,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -199,7 +199,7 @@ public abstract class AbstractEntityResource<T extends AbstractEntity> {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information")
+            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
     public ResponseEntity<Page<T>> search(@RequestParam String query, Pageable pageable)
