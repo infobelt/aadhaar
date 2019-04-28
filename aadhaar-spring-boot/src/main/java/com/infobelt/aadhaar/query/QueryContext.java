@@ -66,7 +66,7 @@ public class QueryContext {
 
         // Lets add the sort by and sort dir if we need it
         getSorts().forEach(f -> filters.put("sortBy", f.getColumnName()));
-        getSorts().forEach(f -> filters.put("sortDir", f.getDirection()).toString());
+        getSorts().forEach(f -> filters.put("sortDir", f.getDirection().toString()));
 
         BeanUtils.populate(object, filters);
         return object;
