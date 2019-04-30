@@ -4,11 +4,14 @@ import com.infobelt.aadhaar.domain.AbstractAssociatedEntity;
 import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.query.QueryContextRepository;
+import com.infobelt.aadhaar.utils.SqlUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
@@ -179,4 +182,57 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         log().debug("Request to search for a page of {} with query {}", getEntityPlural(), query);
         return searchRepository.search(queryStringQuery(query), pageable);
     }
+
+
+    @Transactional(readOnly = true)
+    public <T> Page<T> getDetailsBySql(QueryContext queryContext, String baseQueryString, String resultSetMappingName) {
+        List<T> detailsList = new ArrayList<T>();
+        int totalCount = 0;
+        Pageable pageable = PageRequest.of(queryContext.getPage() - 1, queryContext.getPageSize());
+
+        HashMap<String, Object> selectorMapping = new HashMap<>();
+        StringBuilder queryAllSB = new StringBuilder();
+        StringBuilder whereClauses = new StringBuilder();
+        StringBuilder orderByClauses = new StringBuilder();
+
+        queryAllSB.append(baseQueryString);
+
+        if (queryContext.getQueryComplexFilter() != null) {
+            queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
+                whereClauses.append( whereClauses.length() == 0 ? " WHERE " : " AND ");
+                whereClauses.append(SqlUtil.buildWhereFromComplexFilter(qcf));
+                selectorMapping.put(qcf.getField() + "Param", qcf.getValue());
+            });
+        }
+        queryContext.getSorts().forEach((s) -> {
+            if (orderByClauses.length() > 0){
+                orderByClauses.append(", ");
+            }
+            orderByClauses.append(s.getColumnName() + " " + s.getDirection().toString());
+        });
+
+        if(orderByClauses.length() > 0){
+            orderByClauses.insert(0, " order by ");
+        }
+
+        queryAllSB.append(whereClauses);
+        queryAllSB.append(orderByClauses);
+        try {
+            Query queryAll = SqlUtil.getMappedQuery(em, queryAllSB, pageable, resultSetMappingName);
+            Query queryCount = SqlUtil.getNativeAllQuery(em, queryAllSB);
+
+            for (Map.Entry<String, Object> selectorAssoc : selectorMapping.entrySet()) {
+                queryAll.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
+                queryCount.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
+            }
+            detailsList = (List<T>)queryAll.getResultList();
+            totalCount = queryCount.getResultList().size();
+
+        } catch (Exception ex) {
+            log.error("Exception caught while getting Product Details. " + ex);
+        }
+
+        return new PageImpl<T>(detailsList, pageable, totalCount);
+    }
+
 }
