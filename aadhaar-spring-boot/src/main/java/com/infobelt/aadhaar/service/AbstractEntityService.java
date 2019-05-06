@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.time.ZonedDateTime;
@@ -235,4 +236,12 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         return new PageImpl<T>(detailsList, pageable, totalCount);
     }
 
+
+    @Transactional(readOnly = true)
+    public T fetchEntityGraph(long id, String graphName){
+        EntityGraph graph = this.em.getEntityGraph(graphName);
+        Map hints = new HashMap();
+        hints.put("javax.persistence.fetchgraph", graph);
+        return (T)this.em.find(getEntityClass(), id, hints);
+    }
 }
