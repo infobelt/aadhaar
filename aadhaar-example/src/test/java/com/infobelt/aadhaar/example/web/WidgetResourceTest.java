@@ -3,7 +3,7 @@ package com.infobelt.aadhaar.example.web;
 import com.infobelt.aadhaar.example.domain.Widget;
 import com.infobelt.aadhaar.test.AbstractYamlResourceTestBase;
 
-public class WidgetResourceTest extends AbstractYamlResourceTestBase {
+public class WidgetResourceTest extends AbstractYamlResourceTestBase<Widget> {
 
     @Override
     public Class<Widget> getEntityClass() {
