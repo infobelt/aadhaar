@@ -67,7 +67,8 @@ objects that have not been persisted is in place).
 Your domain object simply needs to contain the fields that are beyond this base, for example:
 
 ```java
-@Data
+@Getter
+@Setter
 @Entity
 public class Widget extends AbstractEntity {
 
@@ -83,7 +84,8 @@ need to override that in your domain object (the same applies to naming the tabl
 
 
 ```java
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="my_widgets")
 @AttributeOverride(name = "id", column = @Column(name = "widget_id"))
