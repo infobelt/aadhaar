@@ -14,6 +14,8 @@ public enum QueryComplexOperator {
     gt,
     lte,
     lt,
+    gte_date,
+    lte_date,
     isnull,
     isnotnull,
     isempty

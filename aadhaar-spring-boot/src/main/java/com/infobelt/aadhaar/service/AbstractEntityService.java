@@ -202,7 +202,8 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
             queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
                 whereClauses.append( whereClauses.length() == 0 ? " WHERE " : " AND ");
                 whereClauses.append(SqlUtil.buildWhereFromComplexFilter(qcf));
-                selectorMapping.put(qcf.getField() + "Param", qcf.getValue());
+                Map.Entry<String, Object> mapping = SqlUtil.buildSelectorMapping(qcf);
+                selectorMapping.put(mapping.getKey(), mapping.getValue());
             });
         }
         queryContext.getSorts().forEach((s) -> {
