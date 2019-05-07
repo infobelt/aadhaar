@@ -17,7 +17,7 @@ Api Documentation
 
 
 ### URI scheme
-*Host* : localhost:54164  
+*Host* : localhost:53735  
 *BasePath* : /
 
 
@@ -73,8 +73,8 @@ POST /api/widgets
 * widget-resource
 
 
-<a name="listusingget"></a>
-### List a page of the resources
+<a name="listallusingget"></a>
+### List all of the resources (legacy)
 ```
 GET /api/widgets
 ```
@@ -84,26 +84,14 @@ GET /api/widgets
 
 |Type|Name|Schema|
 |---|---|---|
-|**Query**|**filter**  <br>*optional*|string|
-|**Query**|**filters[0].columnName**  <br>*optional*|string|
-|**Query**|**filters[0].value**  <br>*optional*|string|
-|**Query**|**page**  <br>*optional*|integer (int32)|
-|**Query**|**pageSize**  <br>*optional*|integer (int32)|
-|**Query**|**queryComplexFilter.field**  <br>*optional*|string|
-|**Query**|**queryComplexFilter.ignoreCase**  <br>*optional*|boolean|
-|**Query**|**queryComplexFilter.logic**  <br>*optional*|enum (and, or)|
-|**Query**|**queryComplexFilter.operator**  <br>*optional*|enum (contains, doesnotcontain, endswith, startswith, eq, neq, gte, gt, lte, lt, isnull, isnotnull, isempty)|
-|**Query**|**queryComplexFilter.value**  <br>*optional*|string|
-|**Query**|**sorts**  <br>*optional*|string|
-|**Query**|**sorts[0].columnName**  <br>*optional*|string|
-|**Query**|**sorts[0].direction**  <br>*optional*|enum (asc, desc)|
+|**Query**|**list**  <br>*required*|string|
 
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|Successfully listed a page the resources|[Page«Widget»](#45c18d88e0b9f9be269b2a1dc9d28b3e)|
+|**200**|Successfully listed all the resources|< [Widget](#widget) > array|
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|
@@ -350,8 +338,8 @@ DELETE /api/widgets/{id}
 * widget-resource
 
 
-<a name="errorhtmlusingpost"></a>
-### errorHtml
+<a name="errorusingpost"></a>
+### error
 ```
 POST /error
 ```
@@ -361,7 +349,7 @@ POST /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**201**|Created|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -375,7 +363,7 @@ POST /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -383,8 +371,8 @@ POST /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingget"></a>
-### errorHtml
+<a name="errorusingget"></a>
+### error
 ```
 GET /error
 ```
@@ -394,7 +382,7 @@ GET /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
 |**404**|Not Found|No Content|
@@ -402,7 +390,7 @@ GET /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -410,8 +398,8 @@ GET /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingput"></a>
-### errorHtml
+<a name="errorusingput"></a>
+### error
 ```
 PUT /error
 ```
@@ -421,7 +409,7 @@ PUT /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**201**|Created|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -435,7 +423,7 @@ PUT /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -443,8 +431,8 @@ PUT /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingdelete"></a>
-### errorHtml
+<a name="errorusingdelete"></a>
+### error
 ```
 DELETE /error
 ```
@@ -454,7 +442,7 @@ DELETE /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -462,7 +450,7 @@ DELETE /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -470,8 +458,8 @@ DELETE /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingpatch"></a>
-### errorHtml
+<a name="errorusingpatch"></a>
+### error
 ```
 PATCH /error
 ```
@@ -481,7 +469,7 @@ PATCH /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -494,7 +482,7 @@ PATCH /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -502,8 +490,8 @@ PATCH /error
 * basic-error-controller
 
 
-<a name="errorhtmlusinghead"></a>
-### errorHtml
+<a name="errorusinghead"></a>
+### error
 ```
 HEAD /error
 ```
@@ -513,7 +501,7 @@ HEAD /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -526,7 +514,7 @@ HEAD /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -534,8 +522,8 @@ HEAD /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingoptions"></a>
-### errorHtml
+<a name="errorusingoptions"></a>
+### error
 ```
 OPTIONS /error
 ```
@@ -545,7 +533,7 @@ OPTIONS /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -558,7 +546,7 @@ OPTIONS /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags

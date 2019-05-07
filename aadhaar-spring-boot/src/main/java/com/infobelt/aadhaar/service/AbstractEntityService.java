@@ -95,7 +95,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
             searchRepository.save(entity);
         }
 
-        if (isAuditLogged() && entityAuditor != null) {
+        if (isAuditLogged() && !handleSaveAudit(entity) && entityAuditor != null) {
 
             if (entity instanceof AbstractAssociatedEntity) {
                 AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) entity;
@@ -118,6 +118,10 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
         return result;
     }
 
+    protected boolean handleSaveAudit(T entity) {
+        return false;
+    }
+
     @Transactional(readOnly = true)
     public List<T> findAll() {
         log.debug("Request to get all");
@@ -138,11 +142,12 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
     public void delete(Long id) {
         log.debug("Request to delete : {}", id);
-        jpaRepository.deleteById(id);
+        T instance = jpaRepository.getOne(id);
+        delete(instance);
+    }
 
-        if (searchRepository != null) {
-            searchRepository.deleteById(id);
-        }
+    protected boolean handleDeleteAudit(T instance) {
+        return false;
     }
 
     public void delete(T entity) {
@@ -151,6 +156,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
         if (searchRepository != null) {
             searchRepository.delete(entity);
+            handleDeleteAudit(entity);
         }
     }
 
@@ -200,19 +206,19 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
         if (queryContext.getQueryComplexFilter() != null) {
             queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
-                whereClauses.append( whereClauses.length() == 0 ? " WHERE " : " AND ");
+                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : " AND ");
                 whereClauses.append(SqlUtil.buildWhereFromComplexFilter(qcf));
                 selectorMapping.put(qcf.getField() + "Param", qcf.getValue());
             });
         }
         queryContext.getSorts().forEach((s) -> {
-            if (orderByClauses.length() > 0){
+            if (orderByClauses.length() > 0) {
                 orderByClauses.append(", ");
             }
             orderByClauses.append(s.getColumnName() + " " + s.getDirection().toString());
         });
 
-        if(orderByClauses.length() > 0){
+        if (orderByClauses.length() > 0) {
             orderByClauses.insert(0, " order by ");
         }
 
@@ -226,7 +232,7 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
                 queryAll.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
                 queryCount.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
             }
-            detailsList = (List<T>)queryAll.getResultList();
+            detailsList = (List<T>) queryAll.getResultList();
             totalCount = queryCount.getResultList().size();
 
         } catch (Exception ex) {
@@ -238,10 +244,10 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
 
 
     @Transactional(readOnly = true)
-    public T fetchEntityGraph(long id, String graphName){
+    public T fetchEntityGraph(long id, String graphName) {
         EntityGraph graph = this.em.getEntityGraph(graphName);
         Map hints = new HashMap();
         hints.put("javax.persistence.fetchgraph", graph);
-        return (T)this.em.find(getEntityClass(), id, hints);
+        return (T) this.em.find(getEntityClass(), id, hints);
     }
 }
