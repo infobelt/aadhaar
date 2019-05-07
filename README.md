@@ -157,6 +157,10 @@ the objects then you need to change to use /api/widget/list.
 Once you have these basics in place it is worth reading the (API documentation)[docs/api.md] to learn what is exposed to the 
 client and how it works.
 
+Auditing
+========
+
+For more details on Auditing see [the guide](docs/auditing.md)
 
 Testing
 =======
