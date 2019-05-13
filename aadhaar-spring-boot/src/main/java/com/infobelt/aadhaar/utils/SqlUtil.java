@@ -33,13 +33,30 @@ public class SqlUtil {
         String field = queryComplexFilter.getField();
         switch(queryComplexFilter.getOperator()) {
             case eq:
-                return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+                if(queryComplexFilter.isIgnoreCase()){
+                    return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+                }
+                return " " + field + " like NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+            case neq:
+                if(queryComplexFilter.isIgnoreCase()){
+                    return " LOWER(" + field + ") != NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+                }
+                return " " + field + " != NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
             case contains:
-                return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
+                if(queryComplexFilter.isIgnoreCase()){
+                    return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
+                }
+                return " " + field + " like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
             case startswith:
-                return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(:" + field + "Param, '%')), LOWER(" + field + "))";
+                if(queryComplexFilter.isIgnoreCase()){
+                    return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(:" + field + "Param, '%')), LOWER(" + field + "))";
+                }
+                return " " + field + " like NVL2(:" + field + "Param, CONCAT(:" + field + "Param, '%'), " + field + ")";
             case endswith:
-                return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT('%', :" + field + "Param)), LOWER(" + field + "))";
+                if(queryComplexFilter.isIgnoreCase()){
+                    return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT('%', :" + field + "Param)), LOWER(" + field + "))";
+                }
+                return " " + field + " like NVL2(:" + field + "Param, CONCAT('%', :" + field + "Param), " + field + ")";
             case gte:
                 return " " + field + " >= NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
             case gt:

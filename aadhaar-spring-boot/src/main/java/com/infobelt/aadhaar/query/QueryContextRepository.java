@@ -35,7 +35,6 @@ public class QueryContextRepository<T> {
             } catch (NumberFormatException e) {
                 return null;
             }
-
         } else if (path.getJavaType().getName().equals("long") || path.getJavaType().equals(Long.class)) {
             try {
                 return value == null ? null : Long.valueOf(value);
@@ -49,17 +48,33 @@ public class QueryContextRepository<T> {
 
     @SuppressWarnings("unchecked")
     private Predicate buildComplexPredicate(QueryComplexFilter queryComplexFilter, CriteriaBuilder builder, Root root) {
+        Object convertedValue = typeConvert(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
         switch (queryComplexFilter.getOperator()) {
             case eq:
-                return builder.equal(getReference(root, queryComplexFilter.getField()), typeConvert(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue()));
+                if(queryComplexFilter.isIgnoreCase() && convertedValue instanceof String){
+                    return builder.equal(builder.lower(getReference(root, queryComplexFilter.getField())), convertedValue.toString().toLowerCase());
+                }
+                return builder.equal(getReference(root, queryComplexFilter.getField()), convertedValue);
             case neq:
-                return builder.notEqual(getReference(root, queryComplexFilter.getField()), typeConvert(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue()));
+                if(queryComplexFilter.isIgnoreCase() && convertedValue instanceof String){
+                    return builder.notEqual(builder.lower(getReference(root, queryComplexFilter.getField())), convertedValue.toString().toLowerCase());
+                }
+                return builder.notEqual(getReference(root, queryComplexFilter.getField()), convertedValue);
             case contains:
-                return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
+                if(queryComplexFilter.isIgnoreCase()){
+                    return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
+                }
+                return builder.like(getReference(root, queryComplexFilter.getField()), "%" + queryComplexFilter.getValue() + "%");
             case startswith:
-                return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), queryComplexFilter.getValue().toLowerCase() + "%");
+                if(queryComplexFilter.isIgnoreCase()){
+                    return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), queryComplexFilter.getValue().toLowerCase() + "%");
+                }
+                return builder.like(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue() + "%");
             case endswith:
-                return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), "%" + queryComplexFilter.getValue().toLowerCase());
+                if(queryComplexFilter.isIgnoreCase()){
+                    return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), "%" + queryComplexFilter.getValue().toLowerCase());
+                }
+                return builder.like(getReference(root, queryComplexFilter.getField()), "%" + queryComplexFilter.getValue());
             case gte:
                 return builder.greaterThanOrEqualTo(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
             case gt:
