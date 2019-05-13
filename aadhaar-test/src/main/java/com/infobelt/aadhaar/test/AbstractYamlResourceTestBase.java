@@ -8,6 +8,7 @@ import com.infobelt.aadhaar.domain.AbstractEntity;
 import com.infobelt.aadhaar.service.AbstractEntityService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -43,13 +45,13 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
     @Autowired
     private MockMvc mvc;
 
-    private static boolean initialized = false;
-
     @Autowired
     @Getter
     AbstractEntityService<T> serviceLayer;
 
     private Long testId;
+
+    private static String defaultYamlType = "default";
 
     /**
      * Implementation must provide the class that matches the generic
@@ -70,14 +72,23 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
      */
     @Before
     public void setup() throws IOException {
-        if (!initialized) {
-            T instance = getInstance("default");
+            T instance = getInstance(defaultYamlType);
             testId = serviceLayer.save(instance).getId();
+    }
+
+    @After
+    public void teardown(){
+        if (testId != null){
+            serviceLayer.delete(testId);
         }
     }
 
-    private T getInstance(String type) throws IOException {
-        return om.readValue(getClass().getClassLoader().getResourceAsStream(getEntityClass().getSimpleName() + "-" + type + ".yaml"), getEntityClass());
+    protected T getInstance(String type) throws IOException {
+        InputStream requestedType = getClass().getClassLoader().getResourceAsStream(getEntityClass().getSimpleName() + "-" + type + ".yaml");
+        if(requestedType == null){
+            requestedType = getClass().getClassLoader().getResourceAsStream(getEntityClass().getSimpleName()  + "-" + defaultYamlType + ".yaml");
+        }
+        return om.readValue(requestedType, getEntityClass());
     }
 
     private Map<String, String> getMap(String type) throws IOException {
@@ -103,7 +114,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content[*].id").value(hasItem(testId.intValue())));
 
-        getMap("default").forEach((k, v) -> {
+        getMap(defaultYamlType).forEach((k, v) -> {
             try {
                 result.andExpect(jsonPath("$.content[*]." + k).value(hasItem(v)));
             } catch (Exception e) {
@@ -126,7 +137,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        getMap("default").forEach((k, v) -> {
+        getMap(defaultYamlType).forEach((k, v) -> {
             try {
                 result.andExpect(jsonPath("$." + k).value(v));
             } catch (Exception e) {
@@ -164,7 +175,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
             }
         });
 
-        T revert = getInstance("default");
+        T revert = getInstance(defaultYamlType);
         revert.setId(testId);
 
         ResultActions revertResult = mvc.perform(MockMvcRequestBuilders.put(getBaseUrl())
@@ -177,7 +188,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(testId));
 
-        getMap("default").forEach((k, v) -> {
+        getMap(defaultYamlType).forEach((k, v) -> {
             try {
                 revertResult.andExpect(jsonPath("$." + k).value(v));
             } catch (Exception e) {
@@ -201,7 +212,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
     @Test
     @WithMockUser(username = "admin")
     public void delete() throws Exception {
-        T businessLine = getInstance("default");
+        T businessLine = getInstance("delete");
         Long deleteId = serviceLayer.save(businessLine).getId();
 
         mvc.perform(MockMvcRequestBuilders.delete(getBaseUrl() + "{id}", deleteId))
