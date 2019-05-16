@@ -1,6 +1,6 @@
 package com.infobelt.aadhaar.web;
 
-import com.infobelt.aadhaar.domain.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractKeyed;
 import com.infobelt.aadhaar.dto.ExceptionReport;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.service.AbstractEntityService;
@@ -30,7 +30,7 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @Transactional
-public abstract class AbstractEntityResource<T extends AbstractEntity> {
+public abstract class AbstractEntityResource<T extends AbstractKeyed> {
 
     @Autowired
     @Getter

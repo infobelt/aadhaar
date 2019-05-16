@@ -1,9 +1,9 @@
 package com.infobelt.aadhaar.service;
 
-import com.infobelt.aadhaar.domain.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractKeyed;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractAuditingEntityService<T extends AbstractEntity, A> extends AbstractEntityService<T> {
+public abstract class AbstractAuditingEntityService<T extends AbstractKeyed, A> extends AbstractEntityService<T> {
 
     @Autowired
     A customAuditor;

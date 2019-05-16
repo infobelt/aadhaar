@@ -1,7 +1,8 @@
 package com.infobelt.aadhaar.service;
 
 import com.infobelt.aadhaar.domain.AbstractAssociatedEntity;
-import com.infobelt.aadhaar.domain.AbstractEntity;
+import com.infobelt.aadhaar.domain.AbstractKeyed;
+import com.infobelt.aadhaar.domain.SimpleAuditable;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.query.QueryContextRepository;
 import com.infobelt.aadhaar.utils.SqlUtil;
@@ -33,7 +34,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  */
 @Service
 @Slf4j
-public abstract class AbstractEntityService<T extends AbstractEntity> {
+public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
     @Autowired(required = false)
     @Getter
@@ -82,12 +83,16 @@ public abstract class AbstractEntityService<T extends AbstractEntity> {
                 oldValue = oldAttribute.toString();
             }
         }
-        if (entity.getId() == null) {
-            entity.setCreatedOn(ZonedDateTime.now());
-            entity.setCreatedBy(userName);
-        } else {
-            entity.setUpdatedOn(ZonedDateTime.now());
-            entity.setUpdatedBy(userName);
+
+        if (entity instanceof SimpleAuditable) {
+            SimpleAuditable simpleAuditable = (SimpleAuditable) entity;
+            if (entity.getId() == null) {
+                simpleAuditable.setCreatedOn(ZonedDateTime.now());
+                simpleAuditable.setCreatedBy(userName);
+            } else {
+                simpleAuditable.setUpdatedOn(ZonedDateTime.now());
+                simpleAuditable.setUpdatedBy(userName);
+            }
         }
         T result = jpaRepository.save(entity);
 

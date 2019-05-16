@@ -3,7 +3,8 @@ package com.infobelt.aadhaar.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -14,14 +15,8 @@ import java.util.UUID;
  */
 @Data
 @MappedSuperclass
-@EqualsAndHashCode(of = "uuid")
-public abstract class AbstractEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+@EqualsAndHashCode(of = "uuid", callSuper = false)
+public abstract class AbstractEntity extends AbstractKeyed implements Serializable, SimpleAuditable {
 
     @Column(name = "uuid")
     private String uuid = UUID.randomUUID().toString();
