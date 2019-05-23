@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,20 +28,33 @@ public class QueryContextRepository<T> {
         this.persistentClass = clazz;
     }
 
-    private Object typeConvert(Path path, String value) {
 
-        if (path.getJavaType().getName().equals("boolean") || path.getJavaType().equals(Boolean.class)) {
+    private Object typeConvert(Class clazz, String value) {
+
+        if (clazz.getName().equals("boolean") || clazz.equals(Boolean.class)) {
             return value == null ? null : Boolean.valueOf(value);
-        } else if (path.getJavaType().getName().equals("int") || path.getJavaType().equals(Integer.class)) {
+        } else if (clazz.getName().equals("int") || clazz.equals(Integer.class)) {
             try {
                 return value == null ? null : Integer.valueOf(value);
             } catch (NumberFormatException e) {
                 return null;
             }
-        } else if (path.getJavaType().getName().equals("long") || path.getJavaType().equals(Long.class)) {
+        } else if (clazz.getName().equals("long") || clazz.equals(Long.class)) {
             try {
                 return value == null ? null : Long.valueOf(value);
             } catch (NumberFormatException e) {
+                return null;
+            }
+        } else if (clazz.equals(ZonedDateTime.class)){
+            try{
+                return value == null ? null : ZonedDateTime.parse(value);
+            } catch (DateTimeParseException e){
+                return null;
+            }
+        } else if (clazz.equals(LocalDate.class)){
+            try{
+                return value == null ? null : LocalDate.parse(value);
+            } catch (DateTimeParseException e){
                 return null;
             }
         } else {
@@ -46,49 +62,55 @@ public class QueryContextRepository<T> {
         }
     }
 
+
+
     @SuppressWarnings("unchecked")
     private Predicate buildComplexPredicate(QueryComplexFilter queryComplexFilter, CriteriaBuilder builder, Root root) {
-        Object convertedValue = typeConvert(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
+        Path path = getReference(root, queryComplexFilter.getField());
+        Class clazz = path.getJavaType();
+        Object convertedValue = typeConvert(clazz, queryComplexFilter.getValue());
         switch (queryComplexFilter.getOperator()) {
             case eq:
                 if(queryComplexFilter.isIgnoreCase() && convertedValue instanceof String){
-                    return builder.equal(builder.lower(getReference(root, queryComplexFilter.getField())), convertedValue.toString().toLowerCase());
+                    return builder.equal(builder.lower(path), convertedValue.toString().toLowerCase());
                 }
-                return builder.equal(getReference(root, queryComplexFilter.getField()), convertedValue);
+                return builder.equal(path, convertedValue);
             case neq:
                 if(queryComplexFilter.isIgnoreCase() && convertedValue instanceof String){
-                    return builder.notEqual(builder.lower(getReference(root, queryComplexFilter.getField())), convertedValue.toString().toLowerCase());
+                    return builder.notEqual(builder.lower(path), convertedValue.toString().toLowerCase());
                 }
-                return builder.notEqual(getReference(root, queryComplexFilter.getField()), convertedValue);
+                return builder.notEqual(path, convertedValue);
             case contains:
                 if(queryComplexFilter.isIgnoreCase()){
-                    return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
+                    return builder.like(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
                 }
-                return builder.like(getReference(root, queryComplexFilter.getField()), "%" + queryComplexFilter.getValue() + "%");
+                return builder.like(path, "%" + queryComplexFilter.getValue() + "%");
             case startswith:
                 if(queryComplexFilter.isIgnoreCase()){
-                    return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), queryComplexFilter.getValue().toLowerCase() + "%");
+                    return builder.like(builder.lower(path), queryComplexFilter.getValue().toLowerCase() + "%");
                 }
-                return builder.like(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue() + "%");
+                return builder.like(path, queryComplexFilter.getValue() + "%");
             case endswith:
                 if(queryComplexFilter.isIgnoreCase()){
-                    return builder.like(builder.lower(getReference(root, queryComplexFilter.getField())), "%" + queryComplexFilter.getValue().toLowerCase());
+                    return builder.like(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase());
                 }
-                return builder.like(getReference(root, queryComplexFilter.getField()), "%" + queryComplexFilter.getValue());
+                return builder.like(path, "%" + queryComplexFilter.getValue());
             case gte:
-                return builder.greaterThanOrEqualTo(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
+            case gte_date:
+                return builder.greaterThanOrEqualTo(path, (Comparable) convertedValue);
             case gt:
-                return builder.greaterThan(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
+                return builder.greaterThan(path, (Comparable) convertedValue);
             case lte:
-                return builder.lessThanOrEqualTo(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
+            case lte_date:
+                return builder.lessThanOrEqualTo(path, (Comparable) convertedValue);
             case lt:
-                return builder.lessThan(getReference(root, queryComplexFilter.getField()), queryComplexFilter.getValue());
+                return builder.lessThan(path, (Comparable) convertedValue);
             case isnull:
-                return builder.isNull(getReference(root, queryComplexFilter.getField()));
+                return builder.isNull(path);
             case isempty:
-                return builder.isNull(getReference(root, queryComplexFilter.getField()));
+                return builder.isNull(path);
             case isnotnull:
-                return builder.isNotNull(getReference(root, queryComplexFilter.getField()));
+                return builder.isNotNull(path);
             default:
                 throw new RuntimeException("Unsupported operator " + queryComplexFilter.getOperator());
         }
