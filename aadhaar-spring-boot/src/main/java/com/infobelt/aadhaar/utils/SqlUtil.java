@@ -6,10 +6,16 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
 import javax.persistence.Query;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.AbstractMap;
 import java.util.Map;
 
 public class SqlUtil {
+
+    public final static String QUERY_DATE_PATTERN = "dd/MM/yyyy";
 
     public static Query getNativeAllQuery(EntityManager entityManager, StringBuilder query) {
         return
@@ -66,9 +72,9 @@ public class SqlUtil {
             case lt:
                 return " " + field + " < NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
             case gte_date:
-                return " " + field + " >= NVL2(:" + field + "ParamDateGTE, TO_DATE(:" + field + "ParamDateGTE,'DD/MM/YYYY'), " + field + ")";
+                return " " + field + " >= NVL2(:" + field + "ParamDateGTE, TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case lte_date:
-                return " " + field + " <= NVL2(:" + field + "ParamDateLTE, TO_DATE(:" + field + "ParamDateLTE,'DD/MM/YYYY'), " + field + ")";
+                return " " + field + " <= NVL2(:" + field + "ParamDateLTE, TO_DATE(:" + field + "ParamDateLTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             default:
                 throw new RuntimeException("Unsupported operator " + queryComplexFilter.getOperator());
         }
@@ -77,13 +83,29 @@ public class SqlUtil {
     public static Map.Entry<String, Object> buildSelectorMapping(QueryComplexFilter qcf){
         switch (qcf.getOperator()){
             case gte_date:
-                return new AbstractMap.SimpleEntry<>(qcf.getField() + "ParamDateGTE", qcf.getValue());
+                return new AbstractMap.SimpleEntry<>(qcf.getField() + "ParamDateGTE", convertDateForSearch(qcf.getValue()));
             case lte_date:
-                return new AbstractMap.SimpleEntry<>(qcf.getField() + "ParamDateLTE", qcf.getValue());
+                return new AbstractMap.SimpleEntry<>(qcf.getField() + "ParamDateLTE", convertDateForSearch(qcf.getValue()));
             default:
                 return new AbstractMap.SimpleEntry<>(qcf.getField()+ "Param", qcf.getValue());
         }
     }
 
-
+    private static String convertDateForSearch(String dateString){
+        try{
+            ZonedDateTime parsedVal;
+            parsedVal = ZonedDateTime.parse(dateString);
+            return parsedVal.format(DateTimeFormatter.ofPattern(QUERY_DATE_PATTERN));
+        }
+        catch(DateTimeParseException e){
+        }
+        try{
+            LocalDate parsedVal;
+            parsedVal = LocalDate.parse(dateString);
+            return parsedVal.format(DateTimeFormatter.ofPattern(QUERY_DATE_PATTERN));
+        }
+        catch(DateTimeParseException e){
+        }
+        return null;
+    }
 }
