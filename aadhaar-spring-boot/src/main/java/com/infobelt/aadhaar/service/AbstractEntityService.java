@@ -155,11 +155,16 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     public void delete(T entity) {
         log.debug("Request to delete : {}", entity);
         jpaRepository.delete(entity);
-
+        
         if (searchRepository != null) {
             searchRepository.delete(entity);
-            handleDeleteAudit(entity);
         }
+
+        if (isAuditLogged() && !handleSaveAudit(entity) && entityAuditor != null) {
+            entityAuditor.audit(AuditEvent.DELETE, null, entity, entity.getId());
+        }
+
+        handleDeleteAudit(entity);
     }
 
     public String getEntityName() {
