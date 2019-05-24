@@ -75,14 +75,13 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     public T save(T entity) {
         log.debug("Request to save : {}", entity);
         String userName = entityAuditor != null ? entityAuditor.getCurrentUsername() : "unknown";
-        T oldValue = null;
-        if (entity.getId() != null) {
-            Optional<T> found = findOne(entity.getId());
-            if (found.isPresent()) {
-                oldValue = found.get();
-            }
-        }
+        T oldValue = entity.getId() != null ? findOne(entity.getId()).orElse(null) : null;
 
+        // Lets detach it so we have it around for the auditing
+        if (oldValue != null) {
+            em.detach(oldValue);
+        }
+        
         if (entity instanceof SimpleAuditable) {
             SimpleAuditable simpleAuditable = (SimpleAuditable) entity;
             if (entity.getId() == null) {
@@ -111,9 +110,9 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
                 }
             } else {
                 if (entity.getId() != null && oldValue == null) {
-                    entityAuditor.audit(AuditEvent.INSERT, result, null, entity.getId());
+                    entityAuditor.audit(AuditEvent.INSERT, result, null, result.getId());
                 } else {
-                    entityAuditor.audit(AuditEvent.UPDATE, result, oldValue, entity.getId());
+                    entityAuditor.audit(AuditEvent.UPDATE, result, oldValue, result.getId());
                 }
             }
 
