@@ -105,17 +105,17 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             if (entity instanceof AbstractAssociatedEntity) {
                 AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) entity;
                 if (abstractAssociatedEntity.getShContextRowKey() != null) {
-                    entityAuditor.audit(result, abstractAssociatedEntity.getShContextRowKey(), AuditEvent.DISSOCIATE, result.toString(), "");
+                    entityAuditor.audit(AuditEvent.DISSOCIATE, result, null, abstractAssociatedEntity.getShContextRowKey());
 
                 } else if (entity.getId() != null && !result.toString().equals(oldValue)) {
-                    entityAuditor.audit(result, abstractAssociatedEntity.getShContextRowKey(), AuditEvent.ASSOCIATE, result.toString(), oldValue);
+                    entityAuditor.audit(AuditEvent.ASSOCIATE, result, oldValue, abstractAssociatedEntity.getShContextRowKey());
                 }
             } else {
                 if (entity.getId() != null && oldValue.isEmpty()) {
-                    entityAuditor.audit(result, entity.getId(), AuditEvent.INSERT, result.toString(), "");
+                    entityAuditor.audit(AuditEvent.INSERT, result, null, entity.getId());
 
                 } else if (entity.getId() != null && !result.toString().equals(oldValue)) {
-                    entityAuditor.audit(result, entity.getId(), AuditEvent.UPDATE, result.toString(), oldValue);
+                    entityAuditor.audit(AuditEvent.UPDATE, result, oldValue, entity.getId());
                 }
             }
 
