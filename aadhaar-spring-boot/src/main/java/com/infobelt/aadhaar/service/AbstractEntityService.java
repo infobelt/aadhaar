@@ -75,12 +75,11 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     public T save(T entity) {
         log.debug("Request to save : {}", entity);
         String userName = entityAuditor != null ? entityAuditor.getCurrentUsername() : "unknown";
-        String oldValue = "";
+        T oldValue = null;
         if (entity.getId() != null) {
             Optional<T> found = findOne(entity.getId());
             if (found.isPresent()) {
-                T oldAttribute = found.get();
-                oldValue = oldAttribute.toString();
+                oldValue = found.get();
             }
         }
 
@@ -94,6 +93,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
                 simpleAuditable.setUpdatedBy(userName);
             }
         }
+
         T result = jpaRepository.save(entity);
 
         if (searchRepository != null) {
@@ -111,7 +111,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
                     entityAuditor.audit(AuditEvent.ASSOCIATE, result, oldValue, abstractAssociatedEntity.getShContextRowKey());
                 }
             } else {
-                if (entity.getId() != null && oldValue.isEmpty()) {
+                if (entity.getId() != null && oldValue == null) {
                     entityAuditor.audit(AuditEvent.INSERT, result, null, entity.getId());
 
                 } else if (entity.getId() != null && !result.toString().equals(oldValue)) {
