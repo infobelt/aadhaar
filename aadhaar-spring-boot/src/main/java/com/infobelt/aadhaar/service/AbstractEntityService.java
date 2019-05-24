@@ -106,8 +106,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
                 AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) entity;
                 if (abstractAssociatedEntity.getShContextRowKey() != null) {
                     entityAuditor.audit(AuditEvent.DISSOCIATE, result, null, abstractAssociatedEntity.getShContextRowKey());
-
-                } else if (entity.getId() != null && !result.equals(oldValue)) {
+                } else {
                     entityAuditor.audit(AuditEvent.ASSOCIATE, result, oldValue, abstractAssociatedEntity.getShContextRowKey());
                 }
             } else {
