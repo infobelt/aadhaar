@@ -4,6 +4,7 @@ import com.infobelt.aadhaar.domain.AbstractKeyed;
 import com.infobelt.aadhaar.dto.ExceptionReport;
 import com.infobelt.aadhaar.query.QueryContext;
 import com.infobelt.aadhaar.service.AbstractEntityService;
+import com.infobelt.aadhaar.service.SecurityAdvisor;
 import com.infobelt.aadhaar.utils.HeaderUtil;
 import com.infobelt.aadhaar.utils.PaginationUtil;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +36,10 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     @Autowired
     @Getter
     private AbstractEntityService<T> entityService;
+
+    @Autowired(required = false)
+    @Getter
+    private SecurityAdvisor securityAdvisor;
 
     // Provide access to the log for subclasses
     public Logger log() {
@@ -73,11 +78,14 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
         if (entity.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(entityService.getEntityName(), "idexists", "A new " + entityService.getEntityName() + " cannot already have an ID")).body(null);
         }
+
+        authorize("create");
         T result = entityService.save(entity);
         return ResponseEntity.created(new URI("/api/" + entityService.getEntityPlural() + "/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(entityService.getEntityName(), result.getId().toString()))
                 .body(result);
     }
+
 
     @ApiOperation("Update the given instance")
     @PutMapping("/{id}")
@@ -90,12 +98,49 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     }
     )
     public ResponseEntity<T> update(@RequestBody T entity, @PathVariable Long id) {
+
         log.debug("REST request to update {}: {}", entityService.getEntityName(), entity);
+        authorize("update", id);
+
+        // Don't save if we can't find the object
+        entityService.findOne(id).orElseThrow(EntityNotFoundException::new);
         entity.setId(id);
+
         T result = entityService.save(entity);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(entityService.getEntityName(), entity.getId().toString()))
                 .body(result);
+    }
+
+    /**
+     * Check our permissions
+     *
+     * @param action
+     * @param id
+     */
+    private void authorize(String action, Long id) {
+        if (securityAdvisor != null) {
+            if (id != null) {
+                log.debug("Authorize {} on {} with ID {}", action, entityService.getEntityName(), id);
+                if (!securityAdvisor.isPermitted(entityService.getEntityName(), action, id)) {
+                    throw new NotAuthorizedException("You are not authorized to perform " + action + " on " + entityService.getEntityName() + " with ID " + id);
+                }
+            } else {
+                log.debug("Authorize {} on {}", action, entityService.getEntityName());
+                if (!securityAdvisor.isPermitted(entityService.getEntityName(), action)) {
+                    throw new NotAuthorizedException("You are not authorized to perform " + action + " on " + entityService.getEntityName());
+                }
+            }
+        }
+    }
+
+    /**
+     * Check our permissions
+     *
+     * @param action
+     */
+    private void authorize(String action) {
+        authorize(action, null);
     }
 
     // This is from a previous life
@@ -110,7 +155,7 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     @ApiOperation("Update the given instance (legacy method)")
     @PutMapping
     @Deprecated
-    public ResponseEntity<T> update(@RequestBody T entity) throws IllegalAccessException {
+    public ResponseEntity<T> update(@RequestBody T entity) {
         return update(entity, entity.getId());
     }
 
@@ -126,12 +171,13 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     @GetMapping
     public Page<T> list(QueryContext queryContext) {
         log.debug("REST request to get a page of " + entityService.getEntityName());
+        authorize("list");
         return entityService.findAll(queryContext);
     }
 
     @GetMapping("/list")
     @Deprecated
-    @ApiOperation("List all of the resources (legacy)")
+    @ApiOperation("List all the resources (legacy)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully listed all the resources"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -153,14 +199,15 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
             @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
     }
     )
-    @ApiOperation("List all of the resources (legacy)")
+    @ApiOperation("List all the resources (legacy)")
     @GetMapping(params = "list")
     public List<T> listAll() {
         log.debug("REST request to get a page of" + entityService.getEntityName());
+        authorize("list");
         return entityService.findAll();
     }
 
-    @ApiOperation("Get an resource with the provided ID")
+    @ApiOperation("Get a resource with the provided ID")
     @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully got the resource"),
@@ -172,6 +219,7 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     )
     public ResponseEntity<T> get(@PathVariable Long id) {
         log.debug("REST request to get {}: {}", entityService.getEntityName(), id);
+        authorize("get", id);
         Optional<T> entity = entityService.findOne(id);
         return entity.map((response) -> ResponseEntity.ok().headers(null).body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -188,6 +236,7 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     )
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete {} : {}", entityService.getEntityName(), id);
+        authorize("delete", id);
         entityService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(entityService.getEntityName(), id.toString())).build();
     }
@@ -205,6 +254,7 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
     public ResponseEntity<Page<T>> search(@RequestParam String query, Pageable pageable)
             throws URISyntaxException {
         log().debug("REST request to search for a page of {} with query {}", getEntityService().getEntityPlural(), query);
+        authorize("search");
         Page<T> page = entityService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/" + getEntityService().getEntityPlural() + "/_search");
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
