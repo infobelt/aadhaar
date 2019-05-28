@@ -99,7 +99,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             searchRepository.save(entity);
         }
 
-        if (isAuditLogged() && !handleSaveAudit(entity) && entityAuditor != null) {
+        if (isAuditLogged() && !handleSaveAudit(oldValue, entity) && entityAuditor != null) {
 
             if (entity instanceof AbstractAssociatedEntity) {
                 AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) entity;
@@ -120,7 +120,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         return result;
     }
 
-    protected boolean handleSaveAudit(T entity) {
+    protected boolean handleSaveAudit(T oldInstance, T newValue) {
         return false;
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             searchRepository.delete(entity);
         }
 
-        if (isAuditLogged() && !handleSaveAudit(entity) && entityAuditor != null) {
+        if (isAuditLogged() && !handleDeleteAudit(entity) && entityAuditor != null) {
             entityAuditor.audit(AuditEvent.DELETE, null, entity, entity.getId());
         }
 

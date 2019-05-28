@@ -8,8 +8,8 @@ public abstract class AbstractAuditingEntityService<T extends AbstractKeyed, A> 
     @Autowired
     A customAuditor;
 
-    protected boolean handleSaveAudit(T entity) {
-        handleSaveAudit(customAuditor, entity);
+    protected boolean handleSaveAudit(T oldInstance, T newInstance) {
+        handleSaveAudit(customAuditor, oldInstance, newInstance);
         return true;
     }
 
@@ -21,9 +21,10 @@ public abstract class AbstractAuditingEntityService<T extends AbstractKeyed, A> 
      * This will be called when a "save" is issued
      *
      * @param customAuditor
-     * @param entity
+     * @param oldInstance
+     * @param newInstance
      */
-    protected abstract void handleSaveAudit(A customAuditor, T entity);
+    protected abstract void handleSaveAudit(A customAuditor, T oldInstance, T newInstance);
 
     protected boolean handleDeleteAudit(T entity) {
         handleDeleteAudit(customAuditor, entity);
