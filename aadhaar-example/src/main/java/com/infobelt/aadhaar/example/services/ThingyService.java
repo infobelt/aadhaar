@@ -13,8 +13,8 @@ public class ThingyService extends AbstractAuditingEntityService<Thingy, CustomA
     }
 
     @Override
-    protected void handleSaveAudit(CustomAuditor customAuditor, Thingy entity) {
-        customAuditor.auditLogMe(entity);
+    protected void handleSaveAudit(CustomAuditor customAuditor, Thingy oldInstance, Thingy newInstance) {
+        customAuditor.auditLogMe(newInstance);
     }
 
     @Override
