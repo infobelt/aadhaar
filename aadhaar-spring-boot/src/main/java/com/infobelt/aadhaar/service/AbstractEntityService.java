@@ -154,7 +154,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
     public void delete(T entity) {
         log.debug("Request to delete : {}", entity);
-        jpaRepository.delete(entity);
+        jpaRepository.deleteById(entity.getId());
 
         if (searchRepository != null) {
             searchRepository.delete(entity);
