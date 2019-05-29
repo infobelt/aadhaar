@@ -58,6 +58,10 @@ pipeline {
                     sh "jx step tag --version \$(cat VERSION)"
                     sh "mvn clean deploy"
 
+                    sh "git add README.md"
+                    sh "git commit -m Update"
+                    sh "git push origin master"
+
                     slackSend(color: 'good', message: "Aadhaar :: Deployed ${env.VERSION} (${env.BUILD_URL})")
 
                 }
