@@ -17,7 +17,7 @@ In your Spring Boot application add a dependency on:
 <dependency>
     <groupId>com.infobelt.aadhaar</groupId>
     <artifactId>aadhaar-spring-boot</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>${project.version}</version>
 </dependency>
 ```
 
