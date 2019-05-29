@@ -72,19 +72,14 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     }
 
     @Transactional
-    public T save(T entity) {
-        log.debug("Request to save : {}", entity);
+    public T save(T newInstance) {
+        log.debug("Request to save : {}", newInstance);
         String userName = entityAuditor != null ? entityAuditor.getCurrentUsername() : "unknown";
-        T oldValue = entity.getId() != null ? findOne(entity.getId()).orElse(null) : null;
+        T oldInstance = newInstance.getId() != null ? findOne(newInstance.getId()).orElse(null) : null;
 
-        // Lets detach it so we have it around for the auditing
-        if (oldValue != null) {
-            em.detach(oldValue);
-        }
-        
-        if (entity instanceof SimpleAuditable) {
-            SimpleAuditable simpleAuditable = (SimpleAuditable) entity;
-            if (entity.getId() == null) {
+        if (newInstance instanceof SimpleAuditable) {
+            SimpleAuditable simpleAuditable = (SimpleAuditable) newInstance;
+            if (newInstance.getId() == null) {
                 simpleAuditable.setCreatedOn(ZonedDateTime.now());
                 simpleAuditable.setCreatedBy(userName);
             } else {
@@ -93,34 +88,43 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             }
         }
 
-        T result = jpaRepository.save(entity);
+        // We will audit before we save otherwise we will have problems with JPA making
+        // old and new instance the same
 
-        if (searchRepository != null) {
-            searchRepository.save(entity);
-        }
+        if (isAuditLogged()) {
 
-        if (isAuditLogged() && !handleSaveAudit(oldValue, entity) && entityAuditor != null) {
+            if (!this.handleSaveAudit(oldInstance, newInstance) && entityAuditor != null) {
 
-            if (entity instanceof AbstractAssociatedEntity) {
-                AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) entity;
-                if (abstractAssociatedEntity.getShContextRowKey() != null) {
-                    entityAuditor.audit(AuditEvent.DISSOCIATE, result, null, abstractAssociatedEntity.getShContextRowKey());
+                if (newInstance instanceof AbstractAssociatedEntity) {
+                    AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) newInstance;
+                    if (abstractAssociatedEntity.getShContextRowKey() != null) {
+                        entityAuditor.audit(AuditEvent.DISSOCIATE, newInstance, null, abstractAssociatedEntity.getShContextRowKey());
+                    } else {
+                        entityAuditor.audit(AuditEvent.ASSOCIATE, newInstance, oldInstance, abstractAssociatedEntity.getShContextRowKey());
+                    }
                 } else {
-                    entityAuditor.audit(AuditEvent.ASSOCIATE, result, oldValue, abstractAssociatedEntity.getShContextRowKey());
-                }
-            } else {
-                if (entity.getId() != null && oldValue == null) {
-                    entityAuditor.audit(AuditEvent.INSERT, result, null, result.getId());
-                } else {
-                    entityAuditor.audit(AuditEvent.UPDATE, result, oldValue, result.getId());
+                    if (newInstance.getId() != null && oldInstance == null) {
+                        entityAuditor.audit(AuditEvent.INSERT, newInstance, null, newInstance.getId());
+                    } else {
+                        entityAuditor.audit(AuditEvent.UPDATE, newInstance, oldInstance, newInstance.getId());
+                    }
                 }
             }
 
         }
+
+
+        T result = jpaRepository.save(newInstance);
+
+        if (searchRepository != null) {
+            searchRepository.save(newInstance);
+        }
+
+
         return result;
     }
 
-    protected boolean handleSaveAudit(T oldInstance, T newValue) {
+    protected boolean handleSaveAudit(T oldInstance, T newInstance) {
         return false;
     }
 

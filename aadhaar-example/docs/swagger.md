@@ -17,7 +17,7 @@ Api Documentation
 
 
 ### URI scheme
-*Host* : localhost:59224  
+*Host* : localhost:52451  
 *BasePath* : /
 
 
@@ -350,8 +350,8 @@ DELETE /api/widgets/{id}
 * widget-resource
 
 
-<a name="errorhtmlusingpost"></a>
-### errorHtml
+<a name="errorusingpost"></a>
+### error
 ```
 POST /error
 ```
@@ -361,7 +361,7 @@ POST /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**201**|Created|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -375,7 +375,7 @@ POST /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -383,8 +383,8 @@ POST /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingget"></a>
-### errorHtml
+<a name="errorusingget"></a>
+### error
 ```
 GET /error
 ```
@@ -394,7 +394,7 @@ GET /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
 |**404**|Not Found|No Content|
@@ -402,7 +402,7 @@ GET /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -410,8 +410,8 @@ GET /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingput"></a>
-### errorHtml
+<a name="errorusingput"></a>
+### error
 ```
 PUT /error
 ```
@@ -421,7 +421,7 @@ PUT /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**201**|Created|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -435,7 +435,7 @@ PUT /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -443,8 +443,8 @@ PUT /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingdelete"></a>
-### errorHtml
+<a name="errorusingdelete"></a>
+### error
 ```
 DELETE /error
 ```
@@ -454,7 +454,7 @@ DELETE /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -462,7 +462,7 @@ DELETE /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -470,8 +470,8 @@ DELETE /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingpatch"></a>
-### errorHtml
+<a name="errorusingpatch"></a>
+### error
 ```
 PATCH /error
 ```
@@ -481,7 +481,7 @@ PATCH /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -494,7 +494,7 @@ PATCH /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -502,8 +502,8 @@ PATCH /error
 * basic-error-controller
 
 
-<a name="errorhtmlusinghead"></a>
-### errorHtml
+<a name="errorusinghead"></a>
+### error
 ```
 HEAD /error
 ```
@@ -513,7 +513,7 @@ HEAD /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -526,7 +526,7 @@ HEAD /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
@@ -534,8 +534,8 @@ HEAD /error
 * basic-error-controller
 
 
-<a name="errorhtmlusingoptions"></a>
-### errorHtml
+<a name="errorusingoptions"></a>
+### error
 ```
 OPTIONS /error
 ```
@@ -545,7 +545,7 @@ OPTIONS /error
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|OK|[ModelAndView](#modelandview)|
+|**200**|OK|< string, object > map|
 |**204**|No Content|No Content|
 |**401**|Unauthorized|No Content|
 |**403**|Forbidden|No Content|
@@ -558,7 +558,7 @@ OPTIONS /error
 
 #### Produces
 
-* `text/html`
+* `\*/*`
 
 
 #### Tags
