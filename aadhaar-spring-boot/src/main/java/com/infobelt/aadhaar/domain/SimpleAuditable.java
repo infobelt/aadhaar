@@ -3,7 +3,7 @@ package com.infobelt.aadhaar.domain;
 import java.time.ZonedDateTime;
 
 /**
- * A simple interface which a {@link AbstractKeyed} can implement if
+ * A simple interface that a {@link AbstractKeyed} can implement if
  * it wants to be updated by the {@link com.infobelt.aadhaar.service.AbstractEntityService}
  */
 public interface SimpleAuditable {

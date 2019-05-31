@@ -9,37 +9,17 @@ public enum AuditEvent {
 
     OBJECT(""),
     /**
-     * A new instance of a Skye component was inserted into the database.
+     * A new instance inserted into the database.
      */
     INSERT("added"),
     /**
-     * A Skye component was updated.
+     * A Skye component updated.
      */
     UPDATE("modified"),
     /**
-     * A Skye component was deleted.
+     * A Skye component deleted.
      */
-    DELETE("removed"),
-    /**
-     * A user performed a search.
-     */
-    SEARCH("searched"),
-    /**
-     * A entity is associated to another
-     */
-    ASSOCIATE("associated"),
-    /**
-     * A entity is dissociated to another
-     */
-    DISSOCIATE("dissociated"),
-    /**
-     * A task is canceled by the user
-     */
-    CANCELED("cancelled"),
-    /**
-     * A task is canceled by the user
-     */
-    REFRESH("refreshed");
+    DELETE("removed");
 
     private String value;
 

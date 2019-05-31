@@ -1,6 +1,5 @@
 package com.infobelt.aadhaar.service;
 
-import com.infobelt.aadhaar.domain.AbstractAssociatedEntity;
 import com.infobelt.aadhaar.domain.AbstractKeyed;
 import com.infobelt.aadhaar.domain.SimpleAuditable;
 import com.infobelt.aadhaar.query.QueryContext;
@@ -75,6 +74,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     public T save(T newInstance) {
         log.debug("Request to save : {}", newInstance);
         String userName = entityAuditor != null ? entityAuditor.getCurrentUsername() : "unknown";
+
         T oldInstance = newInstance.getId() != null ? findOne(newInstance.getId()).orElse(null) : null;
 
         if (newInstance instanceof SimpleAuditable) {
@@ -91,30 +91,24 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         // We will audit before we save otherwise we will have problems with JPA making
         // old and new instance the same
 
-        if (isAuditLogged()) {
+        boolean isNew = oldInstance == null;
 
+        // If it is not new we need to audit before we save to ensure we have the old value
+        if (isAuditLogged() && !isNew) {
             if (!this.handleSaveAudit(oldInstance, newInstance) && entityAuditor != null) {
-
-                if (newInstance instanceof AbstractAssociatedEntity) {
-                    AbstractAssociatedEntity abstractAssociatedEntity = (AbstractAssociatedEntity) newInstance;
-                    if (abstractAssociatedEntity.getShContextRowKey() != null) {
-                        entityAuditor.audit(AuditEvent.DISSOCIATE, newInstance, null, abstractAssociatedEntity.getShContextRowKey());
-                    } else {
-                        entityAuditor.audit(AuditEvent.ASSOCIATE, newInstance, oldInstance, abstractAssociatedEntity.getShContextRowKey());
-                    }
-                } else {
-                    if (newInstance.getId() != null && oldInstance == null) {
-                        entityAuditor.audit(AuditEvent.INSERT, newInstance, null, newInstance.getId());
-                    } else {
-                        entityAuditor.audit(AuditEvent.UPDATE, newInstance, oldInstance, newInstance.getId());
-                    }
-                }
+                entityAuditor.audit(AuditEvent.INSERT, newInstance, null, newInstance.getId());
             }
-
         }
 
-
         T result = jpaRepository.save(newInstance);
+        jpaRepository.flush();
+
+        // If it is new then we need to audit after the save so we have the ID
+        if (isAuditLogged() && isNew) {
+            if (!this.handleSaveAudit(null, newInstance) && entityAuditor != null) {
+                entityAuditor.audit(AuditEvent.UPDATE, newInstance, null, newInstance.getId());
+            }
+        }
 
         if (searchRepository != null) {
             searchRepository.save(newInstance);
