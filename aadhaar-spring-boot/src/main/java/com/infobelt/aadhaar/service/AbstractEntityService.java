@@ -106,12 +106,12 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         // If it is new then we need to audit after the save so we have the ID
         if (isAuditLogged() && isNew) {
             if (!this.handleSaveAudit(null, newInstance) && entityAuditor != null) {
-                entityAuditor.audit(AuditEvent.UPDATE, newInstance, null, newInstance.getId());
+                entityAuditor.audit(AuditEvent.UPDATE, result, null, result.getId());
             }
         }
 
         if (searchRepository != null) {
-            searchRepository.save(newInstance);
+            searchRepository.save(result);
         }
 
 
