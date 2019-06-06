@@ -73,7 +73,13 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
     @Before
     public void setup() throws IOException {
             T instance = getInstance(defaultYamlType);
-            testId = serviceLayer.save(instance).getId();
+            T resultInstance = serviceLayer.save(instance);
+            testId = resultInstance.getId();
+            postCreate(resultInstance);
+    }
+
+    public void postCreate(T instance) {
+        // nothing to do
     }
 
     @After
@@ -175,6 +181,8 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
             }
         });
 
+        postUpdate(update);
+
         T revert = getInstance(defaultYamlType);
         revert.setId(testId);
 
@@ -196,6 +204,16 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
             }
         });
 
+        postRevert(revert);
+
+    }
+
+    public void postRevert(T instance) {
+        // nothing to do
+    }
+
+    public void postUpdate(T instance) {
+        // nothing to do
     }
 
     // Used internally to serialize the object to JSON
