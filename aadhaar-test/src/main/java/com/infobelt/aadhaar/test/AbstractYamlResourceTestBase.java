@@ -208,10 +208,20 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
 
     }
 
+    /**
+     * Call back hook
+     *
+     * @param businessLine
+     */
     public void postRevert(T instance) {
         // nothing to do
     }
 
+    /**
+     * Call back hook
+     *
+     * @param businessLine
+     */
     public void postUpdate(T instance) {
         // nothing to do
     }
@@ -235,5 +245,16 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
 
         mvc.perform(MockMvcRequestBuilders.delete(getBaseUrl() + "{id}", deleteId))
                 .andExpect(status().isOk());
+
+        postDelete(businessLine);
+    }
+
+    /**
+     * Call back hook
+     *
+     * @param businessLine
+     */
+    public void postDelete(T businessLine) {
+        // Do nothing
     }
 }
