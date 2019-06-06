@@ -96,7 +96,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         // If it is not new we need to audit before we save to ensure we have the old value
         if (isAuditLogged() && !isNew) {
             if (!this.handleSaveAudit(oldInstance, newInstance) && entityAuditor != null) {
-                entityAuditor.audit(AuditEvent.INSERT, newInstance, null, newInstance.getId());
+                entityAuditor.audit(AuditEvent.UPDATE, newInstance, oldInstance, newInstance.getId());
             }
         }
 
@@ -106,7 +106,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         // If it is new then we need to audit after the save so we have the ID
         if (isAuditLogged() && isNew) {
             if (!this.handleSaveAudit(null, newInstance) && entityAuditor != null) {
-                entityAuditor.audit(AuditEvent.UPDATE, result, null, result.getId());
+                entityAuditor.audit(AuditEvent.INSERT, result, null, result.getId());
             }
         }
 
