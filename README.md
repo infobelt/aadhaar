@@ -8,6 +8,13 @@ The tools can be used to simplify building applications and provide some out-of-
 
 In the following sections, we walk through how some of the components can be used in your application.
 
+Template
+========
+
+We are adding a basic Template you can use from Github to start your project
+
+https://github.com/infobelt/aadhaar-template
+
 Installation
 ============
 
