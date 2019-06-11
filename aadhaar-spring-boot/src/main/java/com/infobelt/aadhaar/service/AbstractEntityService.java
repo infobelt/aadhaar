@@ -32,6 +32,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  * An abstract base for services that allows us to service most of the standard requests through a service
  * layer
  */
+@Transactional
 @Service
 @Slf4j
 public abstract class AbstractEntityService<T extends AbstractKeyed> {
@@ -154,14 +155,14 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     public void delete(T entity) {
         log.debug("Request to delete : {}", entity);
 
-        if (isAuditLogged() && !handleDeleteAudit(entity) && entityAuditor != null) {
-            entityAuditor.audit(AuditEvent.DELETE, null, Hibernate.unproxy(entity), entity.getId());
-        }
-
         jpaRepository.deleteById(entity.getId());
 
         if (searchRepository != null) {
             searchRepository.delete(entity);
+        }
+
+        if (isAuditLogged() && !handleDeleteAudit(entity) && entityAuditor != null) {
+            entityAuditor.audit(AuditEvent.DELETE, null, Hibernate.unproxy(entity), entity.getId());
         }
 
     }
