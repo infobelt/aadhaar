@@ -7,6 +7,7 @@ import com.infobelt.aadhaar.query.QueryContextRepository;
 import com.infobelt.aadhaar.utils.SqlUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -154,7 +155,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         log.debug("Request to delete : {}", entity);
 
         if (isAuditLogged() && !handleDeleteAudit(entity) && entityAuditor != null) {
-            entityAuditor.audit(AuditEvent.DELETE, null, entity, entity.getId());
+            entityAuditor.audit(AuditEvent.DELETE, null, Hibernate.unproxy(entity), entity.getId());
         }
 
         jpaRepository.deleteById(entity.getId());
