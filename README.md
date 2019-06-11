@@ -8,6 +8,13 @@ The tools can be used to simplify building applications and provide some out-of-
 
 In the following sections, we walk through how some of the components can be used in your application.
 
+Template
+========
+
+We are adding a basic Template you can use from Github to start your project
+
+https://github.com/infobelt/aadhaar-template
+
 Installation
 ============
 
@@ -19,6 +26,20 @@ In your Spring Boot application add a dependency on:
     <artifactId>aadhaar-spring-boot</artifactId>
     <version>${project.version}</version>
 </dependency>
+```
+
+Note you will need to add the Infobelt Nexus repository
+
+```xml
+ <repositories>
+    <repository>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <id>infobelt-nexus</id>
+        <url>https://nexus.jx.infobelt.com/repository/maven-releases/</url>
+    </repository>
+</repositories>
 ```
 
 Domain Objects, Services and Web Resources
