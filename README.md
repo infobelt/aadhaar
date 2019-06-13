@@ -183,6 +183,11 @@ Auditing
 
 For more details on Auditing see [the guide](docs/auditing.md)
 
+REST API Guidelines
+========
+
+Building REST applications is usually best when we follow guidelines to ensure that they are consistent and well-understood.  Take a look at some [Guidelines](docs/rest-guidelines.md) that we believe are good, and that we aim to follow in Aadhaar.
+
 Testing
 =======
 
