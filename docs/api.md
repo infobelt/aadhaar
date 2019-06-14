@@ -35,4 +35,4 @@ public class WidgetResource extends AbstractEntityResource<Widget> {
 }
 ```
 
-You can see an example of API that is generated [in this Swaagger Documentation](../aadaar-example/docs/swagger.md)
+You can see an example of API that is generated [in this Swaagger Documentation](../aadhaar-example/docs/swagger.md)
