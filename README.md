@@ -191,7 +191,16 @@ Building REST applications is usually best when we follow guidelines to ensure t
 Testing
 =======
 
-More soon...
+Testing of basic CRUD operations for resources that extend AbstractEntityResource can be simplified by
+extending AbstractYamlResourceTestBase in your test class.  
+
+The class type (CLASS_NAME) to be tested should be provided to the AbstractYamlResourceTestBase as its generic type.
+
+At a minimum, you must create two yaml files (CLASS_NAME-default.yaml and CLASS_NAME-update.yaml) which contain the 
+property names and values to be used in the CRUD actions.  An optional third yaml file may be necessary (CLASS_NAME-delete.yaml)
+if your table schema contains unique column constraints.
+
+Examples of the test .yaml file setup can be found in our [Example project](aadhaar-example) 
 
 License
 =======
