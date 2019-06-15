@@ -5,7 +5,7 @@ This is a sample Spring Boot application which uses Infobelt's Aadhaar library. 
 services, and web (resources) directories all extend the aadhaar base classes, as described in the [aadhaar read me](../README.md).
 
 Swagger API documentation
-========
+---------------------     
 
 Once the application has been started, you can view the specific documentation for the
 APIs exposed in this example by browsing http://localhost:8080/swagger-ui.html.  
