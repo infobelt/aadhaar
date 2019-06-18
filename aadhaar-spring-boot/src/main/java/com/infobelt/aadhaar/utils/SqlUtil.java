@@ -28,12 +28,17 @@ public class SqlUtil {
 
         Query executeQuery = entityManager
                 .createNativeQuery(query.toString(), resultSetName)
-                .setFlushMode(FlushModeType.COMMIT)
-                .setMaxResults(pageable.getPageSize())
-                .setFirstResult((pageable.getPageNumber()) * pageable.getPageSize());
+                .setFlushMode(FlushModeType.COMMIT);
 
+        //pageable would be null if we were returning all results
+        if(pageable != null){
+            executeQuery.setMaxResults(pageable.getPageSize());
+            executeQuery.setFirstResult((pageable.getPageNumber()) * pageable.getPageSize());
+
+        }
         return executeQuery;
     }
+
 
     public static String buildWhereFromComplexFilter(QueryComplexFilter queryComplexFilter) {
         String field = queryComplexFilter.getField();

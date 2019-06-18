@@ -258,4 +258,29 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         hints.put("javax.persistence.fetchgraph", graph);
         return (T) this.em.find(getEntityClass(), id, hints);
     }
+
+    /** ToDo:  
+     * This method can be removed if we call getDetailsBySql and just set the page size
+     * on the query context to a value we determine should be the most number of rows returned.
+     *
+     * Returning data with no sanity check on the amount of data being returned could result in
+     * performance problems.
+     * */
+    @Transactional(readOnly = true)
+    public List<T> getExtractDetailsBySql(String baseQueryString, String resultSetMappingName) {
+        List<T> detailsList = new ArrayList<>();
+
+        StringBuilder queryAllSB = new StringBuilder();
+        queryAllSB.append(baseQueryString);
+
+        try {
+            Query queryAll = SqlUtil.getMappedQuery(em, queryAllSB, null, resultSetMappingName);
+            detailsList = (List<T>) queryAll.getResultList();
+
+        } catch (Exception ex) {
+            log.error("Exception caught while getting Details for extract. " + ex);
+        }
+
+        return detailsList;
+    }
 }
