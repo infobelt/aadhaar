@@ -267,8 +267,8 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
      * performance problems.
      * */
     @Transactional(readOnly = true)
-    public List<T> getExtractDetailsBySql(String baseQueryString, String resultSetMappingName) {
-        List<T> detailsList = new ArrayList<>();
+    public <T> List<T> getExtractDetailsBySql(String baseQueryString, String resultSetMappingName) {
+        List<T> detailsList = new ArrayList<T>();
 
         StringBuilder queryAllSB = new StringBuilder();
         queryAllSB.append(baseQueryString);
