@@ -97,6 +97,7 @@ public class SqlUtil {
     }
 
     private static String convertDateForSearch(String dateString){
+        dateString = dateString.replace("%2B", "+");
         try{
             ZonedDateTime parsedVal;
             parsedVal = ZonedDateTime.parse(dateString);
