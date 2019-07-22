@@ -11,7 +11,7 @@ More description about the API
 
 
 ### URI scheme
-*Host* : localhost:45683  
+*Host* : localhost:38545  
 *BasePath* : /
 
 
@@ -66,8 +66,8 @@ POST /api/widgets
 * widget-resource
 
 
-<a name="listusingget"></a>
-### List a page of the resources
+<a name="listallusingget"></a>
+### List all the resources (legacy)
 ```
 GET /api/widgets
 ```
@@ -77,26 +77,14 @@ GET /api/widgets
 
 |Type|Name|Schema|
 |---|---|---|
-|**Query**|**filter**  <br>*optional*|string|
-|**Query**|**filters[0].columnName**  <br>*optional*|string|
-|**Query**|**filters[0].value**  <br>*optional*|string|
-|**Query**|**page**  <br>*optional*|integer (int32)|
-|**Query**|**pageSize**  <br>*optional*|integer (int32)|
-|**Query**|**queryComplexFilter.field**  <br>*optional*|string|
-|**Query**|**queryComplexFilter.ignoreCase**  <br>*optional*|boolean|
-|**Query**|**queryComplexFilter.logic**  <br>*optional*|enum (and, or)|
-|**Query**|**queryComplexFilter.operator**  <br>*optional*|enum (contains, doesnotcontain, endswith, startswith, eq, neq, gte, gt, lte, lt, gte_date, lte_date, isnull, isnotnull, isempty)|
-|**Query**|**queryComplexFilter.value**  <br>*optional*|string|
-|**Query**|**sorts**  <br>*optional*|string|
-|**Query**|**sorts[0].columnName**  <br>*optional*|string|
-|**Query**|**sorts[0].direction**  <br>*optional*|enum (asc, desc)|
+|**Query**|**list**  <br>*required*|string|
 
 
 #### Responses
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|Successfully listed a page the resources|[Page«Widget»](#45c18d88e0b9f9be269b2a1dc9d28b3e)|
+|**200**|Successfully listed all the resources|< [Widget](#widget) > array|
 |**401**|You are not authorized to view the resource|No Content|
 |**403**|Accessing the resource you were trying to reach is forbidden|No Content|
 |**404**|The resource you were trying to reach is not found|No Content|

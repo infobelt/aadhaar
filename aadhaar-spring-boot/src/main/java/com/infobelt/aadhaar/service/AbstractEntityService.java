@@ -211,6 +211,15 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
         queryAllSB.append(baseQueryString);
 
+        if(queryContext.getFilters() != null){
+            queryContext.getFilters().forEach((filter) -> {
+                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : " AND ");
+                whereClauses.append(SqlUtil.buildWhereFromSimpleFilter(filter));
+                Map.Entry<String, Object> mapping = SqlUtil.buildSimpleSelectorMapping(filter.getColumnName(), filter.getValue());
+                selectorMapping.put(mapping.getKey(), mapping.getValue());
+            });
+        }
+
         if (queryContext.getQueryComplexFilter() != null) {
             queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
                 whereClauses.append(whereClauses.length() == 0 ? " WHERE " : " AND ");

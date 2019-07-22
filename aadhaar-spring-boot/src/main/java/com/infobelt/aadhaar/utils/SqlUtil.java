@@ -1,6 +1,7 @@
 package com.infobelt.aadhaar.utils;
 
 import com.infobelt.aadhaar.query.QueryComplexFilter;
+import com.infobelt.aadhaar.query.QueryFilter;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -39,6 +40,10 @@ public class SqlUtil {
         return executeQuery;
     }
 
+    public static String buildWhereFromSimpleFilter(QueryFilter queryFilter) {
+        String field = queryFilter.getColumnName();
+        return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+    }
 
     public static String buildWhereFromComplexFilter(QueryComplexFilter queryComplexFilter) {
         String field = queryComplexFilter.getField();
@@ -83,6 +88,10 @@ public class SqlUtil {
             default:
                 throw new RuntimeException("Unsupported operator " + queryComplexFilter.getOperator());
         }
+    }
+
+    public static Map.Entry<String, Object> buildSimpleSelectorMapping(String fieldName, String value) {
+        return new AbstractMap.SimpleEntry<>(fieldName + "Param", value);
     }
 
     public static Map.Entry<String, Object> buildSelectorMapping(QueryComplexFilter qcf){
