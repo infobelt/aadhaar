@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
 import javax.persistence.Query;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -106,7 +108,14 @@ public class SqlUtil {
     }
 
     private static String convertDateForSearch(String dateString){
-        dateString = dateString.replace("%2B", "+");
+        //First, decode date - date is encoded to prevent the lost of '+'
+        try {
+            dateString = URLDecoder.decode(dateString, "UTF-8");
+        }
+        catch(UnsupportedEncodingException e){
+            return null;
+        }
+
         try{
             ZonedDateTime parsedVal;
             parsedVal = ZonedDateTime.parse(dateString);
