@@ -47,13 +47,14 @@ public class QueryContextRepository<T> {
             }
         } else if (clazz.equals(ZonedDateTime.class)){
             try{
-                return value == null ? null : ZonedDateTime.parse(value);
+                //First, decode date - date is encoded to prevent the lost of '+'
+                return value == null ? null : ZonedDateTime.parse(value.replace("%2B", "+"));
             } catch (DateTimeParseException e){
                 return null;
             }
         } else if (clazz.equals(LocalDate.class)){
             try{
-                return value == null ? null : LocalDate.parse(value);
+                return value == null ? null : LocalDate.parse(value.replace("%2B", "+"));
             } catch (DateTimeParseException e){
                 return null;
             }
