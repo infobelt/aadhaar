@@ -54,7 +54,7 @@ public class QueryContextRepository<T> {
             }
         } else if (clazz.equals(LocalDate.class)){
             try{
-                return value == null ? null : LocalDate.parse(value.replace("%2B", "+"));
+                return value == null ? null : LocalDate.parse(value.split("T")[0]);
             } catch (DateTimeParseException e){
                 return null;
             }
