@@ -246,14 +246,16 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             Query queryCount = SqlUtil.getNativeAllQuery(em, queryAllSB);
 
             for (Map.Entry<String, Object> selectorAssoc : selectorMapping.entrySet()) {
-                queryAll.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
-                queryCount.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
+                if (!selectorAssoc.getValue().equals("")) {
+                    queryAll.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
+                    queryCount.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
+                }
             }
             detailsList = (List<T>) queryAll.getResultList();
             totalCount = queryCount.getResultList().size();
 
         } catch (Exception ex) {
-            log.error("Exception caught while getting Product Details. " + ex);
+            log.error("Exception caught while getting Grid Details. " + ex);
         }
 
         return new PageImpl<T>(detailsList, pageable, totalCount);

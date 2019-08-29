@@ -86,6 +86,11 @@ public class QueryContextRepository<T> {
                     return builder.like(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
                 }
                 return builder.like(path, "%" + queryComplexFilter.getValue() + "%");
+            case doesnotcontain:
+                if(queryComplexFilter.isIgnoreCase()){
+                    return builder.notLike(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
+                }
+                return builder.notLike(path, "%" + queryComplexFilter.getValue() + "%");
             case startswith:
                 if(queryComplexFilter.isIgnoreCase()){
                     return builder.like(builder.lower(path), queryComplexFilter.getValue().toLowerCase() + "%");

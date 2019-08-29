@@ -63,6 +63,11 @@ public class SqlUtil {
                     return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
                 }
                 return " " + field + " like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
+            case doesnotcontain:
+                if(queryComplexFilter.isIgnoreCase()){
+                    return " LOWER(" + field + ") not like NVL2(:" + field + "Param, LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
+                }
+                return " " + field + " not like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
             case startswith:
                 if(queryComplexFilter.isIgnoreCase()){
                     return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(:" + field + "Param, '%')), LOWER(" + field + "))";
@@ -85,6 +90,10 @@ public class SqlUtil {
                 return " " + field + " >= NVL2(:" + field + "ParamDateGTE, TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case lte_date:
                 return " " + field + " <= NVL2(:" + field + "ParamDateLTE, TO_DATE(:" + field + "ParamDateLTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
+            case isnull:
+                return " " + field + " is null";
+            case isnotnull:
+                return " " + field + " is not null";
             default:
                 throw new RuntimeException("Unsupported operator " + queryComplexFilter.getOperator());
         }
