@@ -241,22 +241,22 @@ public abstract class AbstractEntityResource<T extends AbstractKeyed> {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(entityService.getEntityName(), id.toString())).build();
     }
 
-    @ApiOperation("Perform a search")
-    @GetMapping("/_search")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully searched for the resource"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
-            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
-    }
-    )
-    public ResponseEntity<Page<T>> search(@RequestParam String query, Pageable pageable)
-            throws URISyntaxException {
-        log().debug("REST request to search for a page of {} with query {}", getEntityService().getEntityPlural(), query);
-        authorize("search");
-        Page<T> page = entityService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/" + getEntityService().getEntityPlural() + "/_search");
-        return new ResponseEntity<>(page, headers, HttpStatus.OK);
-    }
+//    @ApiOperation("Perform a search")
+//    @GetMapping("/_search")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "Successfully searched for the resource"),
+//            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+//            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+//            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+//            @ApiResponse(code = 500, message = "An internal exception has occurred, check the logs for more information", response = ExceptionReport.class)
+//    }
+//    )
+//    public ResponseEntity<Page<T>> search(@RequestParam String query, Pageable pageable)
+//            throws URISyntaxException {
+//        log().debug("REST request to search for a page of {} with query {}", getEntityService().getEntityPlural(), query);
+//        authorize("search");
+//        Page<T> page = entityService.search(query, pageable);
+//        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/" + getEntityService().getEntityPlural() + "/_search");
+//        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+//    }
 }
