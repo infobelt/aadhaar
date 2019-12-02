@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+//import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ import javax.persistence.Query;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+//import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * An abstract base for services that allows us to service most of the standard requests through a service
@@ -44,8 +44,8 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     @Autowired
     private JpaRepository<T, Long> jpaRepository;
 
-    @Autowired(required = false)
-    private ElasticsearchRepository<T, Long> searchRepository;
+//    @Autowired(required = false)
+//    private ElasticsearchRepository<T, Long> searchRepository;
 
     private QueryContextRepository<T> queryContextRepository;
 
@@ -59,9 +59,9 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         return this.log;
     }
 
-    public boolean isSearchIndexed() {
-        return searchRepository != null;
-    }
+//    public boolean isSearchIndexed() {
+//        return searchRepository != null;
+//    }
 
     public boolean isAuditLogged() {
         return true;
@@ -112,9 +112,9 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             }
         }
 
-        if (searchRepository != null) {
-            searchRepository.save(result);
-        }
+//        if (searchRepository != null) {
+//            searchRepository.save(result);
+//        }
 
 
         return result;
@@ -157,9 +157,9 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
         jpaRepository.deleteById(entity.getId());
 
-        if (searchRepository != null) {
-            searchRepository.delete(entity);
-        }
+//        if (searchRepository != null) {
+//            searchRepository.delete(entity);
+//        }
 
         if (isAuditLogged() && !handleDeleteAudit(entity) && entityAuditor != null) {
             entityAuditor.audit(AuditEvent.DELETE, null, Hibernate.unproxy(entity), entity.getId());
@@ -186,16 +186,16 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
     public void deleteAll() {
         jpaRepository.deleteAll();
 
-        if (searchRepository != null) {
-            searchRepository.deleteAll();
-        }
+//        if (searchRepository != null) {
+//            searchRepository.deleteAll();
+//        }
     }
 
-    @Transactional(readOnly = true)
-    public Page<T> search(String query, Pageable pageable) {
-        log().debug("Request to search for a page of {} with query {}", getEntityPlural(), query);
-        return searchRepository.search(queryStringQuery(query), pageable);
-    }
+//    @Transactional(readOnly = true)
+//    public Page<T> search(String query, Pageable pageable) {
+//        log().debug("Request to search for a page of {} with query {}", getEntityPlural(), query);
+//        return searchRepository.search(queryStringQuery(query), pageable);
+//    }
 
 
     @Transactional(readOnly = true)
