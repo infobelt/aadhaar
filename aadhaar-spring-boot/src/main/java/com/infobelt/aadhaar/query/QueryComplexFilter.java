@@ -21,5 +21,6 @@ public class QueryComplexFilter {
     private QueryComplexOperator operator;
     private String value;
     private boolean ignoreCase;
+    private String dataType;
 
 }
