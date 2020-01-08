@@ -50,7 +50,7 @@ public class SqlUtil {
         String dataType = queryComplexFilter.getDataType();
         switch(queryComplexFilter.getOperator()) {
             case eq:
-                if (dataType.equals("clob")) {
+                if (dataType != null && dataType.equals("clob")) {
                     if (queryComplexFilter.isIgnoreCase()) {
                         return " LOWER(" + field + ") like LOWER(:" + field + "Param)";
                     }
@@ -62,7 +62,7 @@ public class SqlUtil {
                     return " " + field + " like NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
                 }
             case neq:
-                if (dataType.equals("clob")) {
+                if (dataType != null && dataType.equals("clob")) {
                     if (queryComplexFilter.isIgnoreCase()) {
                         return " LOWER(" + field + ") not like LOWER(:" + field + "Param)";
                     }
@@ -74,7 +74,7 @@ public class SqlUtil {
                     return " " + field + " != NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
                 }
             case contains:
-                if (dataType.equals("clob")) {
+                if (dataType != null && dataType.equals("clob")) {
                     if (queryComplexFilter.isIgnoreCase()) {
                         return " LOWER(" + field + ") like LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%'))";
                     }
@@ -86,7 +86,7 @@ public class SqlUtil {
                     return " " + field + " like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
                 }
             case doesnotcontain:
-                if (dataType.equals("clob")) {
+                if (dataType != null && dataType.equals("clob")) {
                     if (queryComplexFilter.isIgnoreCase()) {
                         return " LOWER(" + field + ") not like LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%'))";
                     }
@@ -98,7 +98,7 @@ public class SqlUtil {
                     return " " + field + " not like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
                 }
             case startswith:
-                if (dataType.equals("clob")) {
+                if (dataType != null && dataType.equals("clob")) {
                     if (queryComplexFilter.isIgnoreCase()) {
                         return " LOWER(" + field + ") like LOWER(CONCAT(:" + field + "Param, '%'))";
                     }
@@ -110,7 +110,7 @@ public class SqlUtil {
                     return " " + field + " like NVL2(:" + field + "Param, CONCAT(:" + field + "Param, '%'), " + field + ")";
                 }
             case endswith:
-                if (dataType.equals("clob")) {
+                if (dataType != null && dataType.equals("clob")) {
                     if (queryComplexFilter.isIgnoreCase()) {
                         return " LOWER(" + field + ") like LOWER(CONCAT('%', :" + field + "Param))";
                     }
