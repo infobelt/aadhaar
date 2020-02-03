@@ -45,24 +45,23 @@ public class QueryContextRepository<T> {
             } catch (NumberFormatException e) {
                 return null;
             }
-        } else if (clazz.equals(ZonedDateTime.class)){
-            try{
+        } else if (clazz.equals(ZonedDateTime.class)) {
+            try {
                 //First, decode date - date is encoded to prevent the lost of '+'
                 return value == null ? null : ZonedDateTime.parse(value.replace("%2B", "+"));
-            } catch (DateTimeParseException e){
+            } catch (DateTimeParseException e) {
                 return null;
             }
-        } else if (clazz.equals(LocalDate.class)){
-            try{
+        } else if (clazz.equals(LocalDate.class)) {
+            try {
                 return value == null ? null : LocalDate.parse(value.split("T")[0]);
-            } catch (DateTimeParseException e){
+            } catch (DateTimeParseException e) {
                 return null;
             }
         } else {
             return value;
         }
     }
-
 
 
     @SuppressWarnings("unchecked")
@@ -72,32 +71,32 @@ public class QueryContextRepository<T> {
         Object convertedValue = typeConvert(clazz, queryComplexFilter.getValue());
         switch (queryComplexFilter.getOperator()) {
             case eq:
-                if(queryComplexFilter.isIgnoreCase() && convertedValue instanceof String){
+                if (queryComplexFilter.isIgnoreCase() && convertedValue instanceof String) {
                     return builder.equal(builder.lower(path), convertedValue.toString().toLowerCase());
                 }
                 return builder.equal(path, convertedValue);
             case neq:
-                if(queryComplexFilter.isIgnoreCase() && convertedValue instanceof String){
+                if (queryComplexFilter.isIgnoreCase() && convertedValue instanceof String) {
                     return builder.notEqual(builder.lower(path), convertedValue.toString().toLowerCase());
                 }
                 return builder.notEqual(path, convertedValue);
             case contains:
-                if(queryComplexFilter.isIgnoreCase()){
+                if (queryComplexFilter.isIgnoreCase()) {
                     return builder.like(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
                 }
                 return builder.like(path, "%" + queryComplexFilter.getValue() + "%");
             case doesnotcontain:
-                if(queryComplexFilter.isIgnoreCase()){
+                if (queryComplexFilter.isIgnoreCase()) {
                     return builder.notLike(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase() + "%");
                 }
                 return builder.notLike(path, "%" + queryComplexFilter.getValue() + "%");
             case startswith:
-                if(queryComplexFilter.isIgnoreCase()){
+                if (queryComplexFilter.isIgnoreCase()) {
                     return builder.like(builder.lower(path), queryComplexFilter.getValue().toLowerCase() + "%");
                 }
                 return builder.like(path, queryComplexFilter.getValue() + "%");
             case endswith:
-                if(queryComplexFilter.isIgnoreCase()){
+                if (queryComplexFilter.isIgnoreCase()) {
                     return builder.like(builder.lower(path), "%" + queryComplexFilter.getValue().toLowerCase());
                 }
                 return builder.like(path, "%" + queryComplexFilter.getValue());
@@ -163,13 +162,12 @@ public class QueryContextRepository<T> {
             queryContext.getQueryComplexFilter().getFilters().forEach(qcf -> predicates.add(buildComplexPredicate(qcf, builder, root)));
             queryContext.getQueryComplexFilter().getFilters().forEach(qcf -> countPredicates.add(buildComplexPredicate(qcf, builder, countRoot)));
         }
-
         List<Order> orderBy = new ArrayList<>();
         queryContext.getSorts().forEach(sort -> {
             if (sort.getDirection().equals(SortDirection.asc)) {
-                orderBy.add(builder.asc(getReference(root, sort.getColumnName())));
+                orderBy.add(builder.asc(builder.upper(getReference(root, sort.getColumnName()))));
             } else {
-                orderBy.add(builder.desc(getReference(root, sort.getColumnName())));
+                orderBy.add(builder.desc(builder.upper(getReference(root, sort.getColumnName()))));
             }
         });
 
@@ -195,9 +193,9 @@ public class QueryContextRepository<T> {
 
         Pageable pageable = PageRequest.of(queryContext.getPage() - 1, queryContext.getPageSize());
         return new PageImpl(finalQuery
-            .setFirstResult((queryContext.getPage() - 1) * queryContext.getPageSize()) // offset
-            .setMaxResults(queryContext.getPageSize()) // limit
-            .getResultList(), pageable, count);
+                .setFirstResult((queryContext.getPage() - 1) * queryContext.getPageSize()) // offset
+                .setMaxResults(queryContext.getPageSize()) // limit
+                .getResultList(), pageable, count);
     }
 }
 
