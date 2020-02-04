@@ -130,9 +130,9 @@ public class SqlUtil {
             case lt:
                 return " " + field + " < NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
             case gte_date:
-                return " " + field + " >= NVL2(:" + field + "ParamDateGTE, TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
+                return " trunc(" + field + ") >= NVL2(:" + field + "ParamDateGTE, TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case lte_date:
-                return " " + field + " <= NVL2(:" + field + "ParamDateLTE, TO_DATE(:" + field + "ParamDateLTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
+                return " trunc(" + field + ") <= NVL2(:" + field + "ParamDateLTE, TO_DATE(:" + field + "ParamDateLTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case isnull:
                 return " " + field + " is null";
             case isnotnull:
