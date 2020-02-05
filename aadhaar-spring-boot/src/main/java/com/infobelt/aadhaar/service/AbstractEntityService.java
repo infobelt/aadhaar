@@ -232,8 +232,8 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             if (orderByClauses.length() > 0) {
                 orderByClauses.append(", ");
             }
-            orderByClauses.append(" UPPER(");
-            orderByClauses.append(s.getColumnName() + ") " + s.getDirection().toString());
+           // orderByClauses.append(" UPPER(");
+            orderByClauses.append(s.getColumnName() + " " + s.getDirection().toString());
         });
 
         if (orderByClauses.length() > 0) {

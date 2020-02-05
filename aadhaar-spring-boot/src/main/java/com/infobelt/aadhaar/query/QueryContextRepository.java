@@ -165,9 +165,9 @@ public class QueryContextRepository<T> {
         List<Order> orderBy = new ArrayList<>();
         queryContext.getSorts().forEach(sort -> {
             if (sort.getDirection().equals(SortDirection.asc)) {
-                orderBy.add(builder.asc(builder.upper(getReference(root, sort.getColumnName()))));
+                orderBy.add(builder.asc(getReference(root, sort.getColumnName())));
             } else {
-                orderBy.add(builder.desc(builder.upper(getReference(root, sort.getColumnName()))));
+                orderBy.add(builder.desc(getReference(root, sort.getColumnName())));
             }
         });
 
