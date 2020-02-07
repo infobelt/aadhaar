@@ -232,8 +232,15 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             if (orderByClauses.length() > 0) {
                 orderByClauses.append(", ");
             }
-           // orderByClauses.append(" UPPER(");
-            orderByClauses.append(s.getColumnName() + " " + s.getDirection().toString());
+            if(s.getColumnName().equalsIgnoreCase("attribNum")){
+                orderByClauses.append("regexp_substr(attribNum, '^\\D*'), to_number(regexp_substr(attribNum, '\\d+'))");
+            }
+            else{
+                orderByClauses.append(s.getColumnName() + " ");
+//                orderByClauses.append(" UPPER(");
+//                orderByClauses.append(s.getColumnName() + ") ");
+            }
+            orderByClauses.append(s.getDirection().toString());
         });
 
         if (orderByClauses.length() > 0) {
