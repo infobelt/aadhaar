@@ -232,13 +232,13 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             if (orderByClauses.length() > 0) {
                 orderByClauses.append(", ");
             }
-            if(s.getColumnName().equalsIgnoreCase("attribNum")){
-                orderByClauses.append("regexp_substr(attribNum, '^\\D*'), to_number(regexp_substr(attribNum, '\\d+'))");
-            }
-            else{
+            if (s.getColumnName().equalsIgnoreCase("attribNum")) { //to sort according to decimal and alphabets
+                orderByClauses.append("regexp_substr(regexp_replace(attribNum, '^\\.', '0.'), '^\\D*') ");
+                orderByClauses.append(s.getDirection().toString());
+                orderByClauses.append(" nulls first,");
+                orderByClauses.append("to_number(regexp_substr(regexp_replace(attribNum, '^\\.', '0.'), '\\d+\\.?\\d*')) ");
+            } else {
                 orderByClauses.append(s.getColumnName() + " ");
-//                orderByClauses.append(" UPPER(");
-//                orderByClauses.append(s.getColumnName() + ") ");
             }
             orderByClauses.append(s.getDirection().toString());
         });
