@@ -164,10 +164,25 @@ public class QueryContextRepository<T> {
         }
         List<Order> orderBy = new ArrayList<>();
         queryContext.getSorts().forEach(sort -> {
-            if (sort.getDirection().equals(SortDirection.asc)) {
-                orderBy.add(builder.asc(getReference(root, sort.getColumnName())));
+            if (sort.getColumnName().contains("fieldNumber") || sort.getColumnName().contains("fieldNum") || sort.getColumnName().contains("attribNum")) {
+
+                Expression<String> undesirables = builder.literal("^\\.");
+                Expression<String> replaceWith = builder.literal("0.");
+                Expression<String> regExpReplace = builder.function("REGEXP_REPLACE", String.class, getReference(root, sort.getColumnName()),
+                        undesirables, replaceWith);
+                Expression sortExpression = builder.function("TO_NUMBER", Number.class, regExpReplace);
+
+                if (sort.getDirection().equals(SortDirection.asc)) {
+                    orderBy.add(builder.asc(sortExpression));
+                } else {
+                    orderBy.add(builder.desc(sortExpression));
+                }
             } else {
-                orderBy.add(builder.desc(getReference(root, sort.getColumnName())));
+                if (sort.getDirection().equals(SortDirection.asc)) {
+                    orderBy.add(builder.asc(getReference(root, sort.getColumnName())));
+                } else {
+                    orderBy.add(builder.desc(getReference(root, sort.getColumnName())));
+                }
             }
         });
 
