@@ -232,11 +232,11 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
             if (orderByClauses.length() > 0) {
                 orderByClauses.append(", ");
             }
-            if (s.getColumnName().equalsIgnoreCase("attribNum")) { //to sort according to decimal and alphabets
-                orderByClauses.append("regexp_substr(regexp_replace(attribNum, '^\\.', '0.'), '^\\D*') ");
+            if (s.getColumnName().equalsIgnoreCase("fieldNumber") || s.getColumnName().equalsIgnoreCase("fieldNum") || s.getColumnName().equalsIgnoreCase("attribNum")) { //to sort according to decimal and alphabets
+                orderByClauses.append("regexp_substr(regexp_replace(" + s.getColumnName() + ", '^\\.', '0.'), '^\\D*') ");
                 orderByClauses.append(s.getDirection().toString());
                 orderByClauses.append(" nulls first,");
-                orderByClauses.append("to_number(regexp_substr(regexp_replace(attribNum, '^\\.', '0.'), '\\d+\\.?\\d*')) ");
+                orderByClauses.append("to_number(regexp_substr(regexp_replace(" + s.getColumnName() + ", '^\\.', '0.'), '\\d+\\.?\\d*')) ");
             } else {
                 orderByClauses.append(s.getColumnName() + " ");
             }
