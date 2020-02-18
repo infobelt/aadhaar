@@ -5,12 +5,12 @@
     <parent>
         <artifactId>aadhaar</artifactId>
         <groupId>com.infobelt</groupId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>0.2.39</version>
     </parent>
 
     <groupId>com.infobelt.aadhaar</groupId>
     <artifactId>aadhaar-example</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.39</version>
 
     <name>Aadhaar :: Example Application</name>
 
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.infobelt.aadhaar</groupId>
             <artifactId>aadhaar-spring-boot</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>0.2.39</version>
         </dependency>
 
 
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>com.infobelt.aadhaar</groupId>
             <artifactId>aadhaar-test</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>0.2.39</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
