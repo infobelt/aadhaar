@@ -250,23 +250,35 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
         queryAllSB.append(whereClauses);
         queryAllSB.append(orderByClauses);
         try {
-            Query queryAll = SqlUtil.getMappedQuery(em, queryAllSB, pageable, resultSetMappingName);
             Query queryCount = SqlUtil.getNativeAllQuery(em, queryAllSB);
+            queryCount = setMappedQueryParam(queryCount, selectorMapping);
 
-            for (Map.Entry<String, Object> selectorAssoc : selectorMapping.entrySet()) {
-                if (!selectorAssoc.getValue().equals("")) {
-                    queryAll.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
-                    queryCount.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
-                }
-            }
-            detailsList = (List<T>) queryAll.getResultList();
             totalCount = queryCount.getResultList().size();
+
+            if (totalCount < queryContext.getPageSize() * queryContext.getPage()) {
+                queryContext.setPage(((int) Math.floor(totalCount/queryContext.getPageSize())) + 1);
+            }
+            pageable = PageRequest.of(queryContext.getPage() - 1, queryContext.getPageSize());
+
+            Query queryAll = SqlUtil.getMappedQuery(em, queryAllSB, pageable, resultSetMappingName);
+            queryAll = setMappedQueryParam(queryAll, selectorMapping);
+
+            detailsList = (List<T>) queryAll.getResultList();
 
         } catch (Exception ex) {
             log.error("Exception caught while getting Grid Details. " + ex);
         }
 
         return new PageImpl<T>(detailsList, pageable, totalCount);
+    }
+
+    private Query setMappedQueryParam(Query finalQuery, HashMap<String, Object> selectorMapping) {
+        for (Map.Entry<String, Object> selectorAssoc : selectorMapping.entrySet()) {
+            if (!selectorAssoc.getValue().equals("")) {
+                finalQuery.setParameter(selectorAssoc.getKey(), selectorAssoc.getValue());
+            }
+        }
+        return finalQuery;
     }
 
 
