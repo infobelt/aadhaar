@@ -222,7 +222,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
         if (queryContext.getQueryComplexFilter() != null) {
             queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
-                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : " AND ");
+                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : (qcf.getLogicGate().isEmpty()) ? " AND " : " " + qcf.getLogicGate() + " ");
                 whereClauses.append(SqlUtil.buildWhereFromComplexFilter(qcf));
                 Map.Entry<String, Object> mapping = SqlUtil.buildSelectorMapping(qcf);
                 selectorMapping.put(mapping.getKey(), mapping.getValue());
@@ -255,8 +255,13 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
             totalCount = queryCount.getResultList().size();
 
-            if (totalCount < queryContext.getPageSize() * queryContext.getPage()) {
-                queryContext.setPage(((int) Math.floor(totalCount/queryContext.getPageSize())) + 1);
+            int pageSize = queryContext.getPageSize();
+            int page = queryContext.getPage();
+
+            if (totalCount == pageSize) {
+                queryContext.setPage(totalCount / pageSize);
+            } else if (totalCount != pageSize && totalCount < pageSize * page) {
+                queryContext.setPage(((int) Math.floor(totalCount / pageSize)) + 1);
             }
             pageable = PageRequest.of(queryContext.getPage() - 1, queryContext.getPageSize());
 

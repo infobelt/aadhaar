@@ -206,7 +206,9 @@ public class QueryContextRepository<T> {
 
         TypedQuery<T> finalQuery = em.createQuery(query);
 
-        if (count < queryContext.getPageSize() * queryContext.getPage()) {
+        if (count == queryContext.getPageSize()) {
+            queryContext.setPage((int) (count / queryContext.getPageSize()));
+        } else if (count != queryContext.getPageSize() && count < queryContext.getPageSize() * queryContext.getPage()) {
             queryContext.setPage(((int) Math.floor(count/queryContext.getPageSize())) + 1);
         }
         Pageable pageable = PageRequest.of(queryContext.getPage() - 1, queryContext.getPageSize());

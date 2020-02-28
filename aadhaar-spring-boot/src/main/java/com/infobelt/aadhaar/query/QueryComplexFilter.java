@@ -22,5 +22,6 @@ public class QueryComplexFilter {
     private String value;
     private boolean ignoreCase;
     private String dataType;
+    private String logicGate;
 
 }
