@@ -222,7 +222,7 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
         if (queryContext.getQueryComplexFilter() != null) {
             queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
-                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : (qcf.getLogicGate().isEmpty()) ? " AND " : " " + qcf.getLogicGate() + " ");
+                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : (qcf.getLogicGate() == null) ? " AND " : " " + qcf.getLogicGate() + " ");
                 whereClauses.append(SqlUtil.buildWhereFromComplexFilter(qcf));
                 Map.Entry<String, Object> mapping = SqlUtil.buildSelectorMapping(qcf);
                 selectorMapping.put(mapping.getKey(), mapping.getValue());
