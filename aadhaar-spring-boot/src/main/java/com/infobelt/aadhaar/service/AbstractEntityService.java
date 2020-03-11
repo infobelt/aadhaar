@@ -222,8 +222,14 @@ public abstract class AbstractEntityService<T extends AbstractKeyed> {
 
         if (queryContext.getQueryComplexFilter() != null) {
             queryContext.getQueryComplexFilter().getFilters().forEach((qcf) -> {
-                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : (qcf.getLogicGate() == null) ? " AND " : " " + qcf.getLogicGate() + " ");
+                whereClauses.append(whereClauses.length() == 0 ? " WHERE " : (qcf.getLogicGate() == null || qcf.getLogicGate().isEmpty()) ? " AND " : " " + qcf.getLogicGate() + " ");
+                if (qcf.getField().equals("citationTextOld")) {
+                    whereClauses.append("(");
+                }
                 whereClauses.append(SqlUtil.buildWhereFromComplexFilter(qcf));
+                if (qcf.getField().equals("citationTextNew")) {
+                    whereClauses.append(")");
+                }
                 Map.Entry<String, Object> mapping = SqlUtil.buildSelectorMapping(qcf);
                 selectorMapping.put(mapping.getKey(), mapping.getValue());
             });
