@@ -177,6 +177,15 @@ public class QueryContextRepository<T> {
                 } else {
                     orderBy.add(builder.desc(sortExpression));
                 }
+            } else if (sort.getColumnName().contains("auditFieldModified") || sort.getColumnName().contains("auditNewValue")
+                    || sort.getColumnName().contains("auditOldValue")) {
+                if (sort.getDirection().equals(SortDirection.asc)) {
+                    Expression<String> nullFirst = builder.concat(getReference(root, sort.getColumnName()), " nulls first");
+                    orderBy.add(builder.asc(nullFirst));
+                } else {
+                    Expression<String> nullLast = builder.concat(getReference(root, sort.getColumnName()), " nulls last");
+                    orderBy.add(builder.desc(nullLast));
+                }
             } else {
                 if (sort.getDirection().equals(SortDirection.asc)) {
                     orderBy.add(builder.asc(getReference(root, sort.getColumnName())));
