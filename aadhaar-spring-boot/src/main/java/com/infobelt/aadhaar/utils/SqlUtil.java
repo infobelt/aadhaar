@@ -42,7 +42,7 @@ public class SqlUtil {
 
     public static String buildWhereFromSimpleFilter(QueryFilter queryFilter) {
         String field = queryFilter.getColumnName();
-        return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+        return " LOWER(" + field + ") like COALESCE(LOWER(:" + field + "Param), LOWER(" + field + "))";
     }
 
     public static String buildWhereFromComplexFilter(QueryComplexFilter queryComplexFilter) {
@@ -57,9 +57,9 @@ public class SqlUtil {
                     return " " + field + " like :" + field + "Param";
                 } else {
                     if (queryComplexFilter.isIgnoreCase()) {
-                        return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+                        return " LOWER(" + field + ") like COALESCE(LOWER(:" + field + "Param), LOWER(" + field + "))";
                     }
-                    return " " + field + " like NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+                    return " " + field + " like COALESCE(:" + field + "Param, " + field + ")";
                 }
             case neq:
                 if (dataType != null && dataType.equals("clob")) {
@@ -69,9 +69,9 @@ public class SqlUtil {
                     return " " + field + " not like :" + field + "Param";
                 } else {
                     if (queryComplexFilter.isIgnoreCase()) {
-                        return " LOWER(" + field + ") != NVL2(:" + field + "Param, LOWER(:" + field + "Param), LOWER(" + field + "))";
+                        return " LOWER(" + field + ") != COALESCE(LOWER(:" + field + "Param), LOWER(" + field + "))";
                     }
-                    return " " + field + " != NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+                    return " " + field + " != COALESCE(:" + field + "Param, " + field + ")";
                 }
             case contains:
                 if (dataType != null && dataType.equals("clob")) {
@@ -81,9 +81,9 @@ public class SqlUtil {
                     return " " + field + " like CONCAT(CONCAT('%',:" + field + "Param), '%')";
                 } else {
                     if (queryComplexFilter.isIgnoreCase()) {
-                        return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
+                        return " LOWER(" + field + ") like COALESCE(LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
                     }
-                    return " " + field + " like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
+                    return " " + field + " like COALESCE(CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
                 }
             case doesnotcontain:
                 if (dataType != null && dataType.equals("clob")) {
@@ -93,9 +93,9 @@ public class SqlUtil {
                     return " " + field + " not like CONCAT(CONCAT('%',:" + field + "Param), '%')";
                 } else {
                     if (queryComplexFilter.isIgnoreCase()) {
-                        return " LOWER(" + field + ") not like NVL2(:" + field + "Param, LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
+                        return " LOWER(" + field + ") not like COALESCE(LOWER(CONCAT(CONCAT('%',:" + field + "Param), '%')), LOWER(" + field + "))";
                     }
-                    return " " + field + " not like NVL2(:" + field + "Param, CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
+                    return " " + field + " not like COALESCE(CONCAT(CONCAT('%',:" + field + "Param), '%'), " + field + ")";
                 }
             case startswith:
                 if (dataType != null && dataType.equals("clob")) {
@@ -105,9 +105,9 @@ public class SqlUtil {
                     return " " + field + " like CONCAT(:" + field + "Param, '%')";
                 } else {
                     if (queryComplexFilter.isIgnoreCase()) {
-                        return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT(:" + field + "Param, '%')), LOWER(" + field + "))";
+                        return " LOWER(" + field + ") like COALESCE(LOWER(CONCAT(:" + field + "Param, '%')), LOWER(" + field + "))";
                     }
-                    return " " + field + " like NVL2(:" + field + "Param, CONCAT(:" + field + "Param, '%'), " + field + ")";
+                    return " " + field + " like COALESCE(CONCAT(:" + field + "Param, '%'), " + field + ")";
                 }
             case endswith:
                 if (dataType != null && dataType.equals("clob")) {
@@ -117,22 +117,22 @@ public class SqlUtil {
                     return " " + field + " like CONCAT('%', :" + field + "Param)";
                 } else {
                     if (queryComplexFilter.isIgnoreCase()) {
-                        return " LOWER(" + field + ") like NVL2(:" + field + "Param, LOWER(CONCAT('%', :" + field + "Param)), LOWER(" + field + "))";
+                        return " LOWER(" + field + ") like COALESCE(LOWER(CONCAT('%', :" + field + "Param)), LOWER(" + field + "))";
                     }
-                    return " " + field + " like NVL2(:" + field + "Param, CONCAT('%', :" + field + "Param), " + field + ")";
+                    return " " + field + " like COALESCE(CONCAT('%', :" + field + "Param), " + field + ")";
                 }
             case gte:
-                return " " + field + " >= NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+                return " " + field + " >= COALESCE(:" + field + "Param, " + field + ")";
             case gt:
-                return " " + field + " > NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+                return " " + field + " > COALESCE(:" + field + "Param, " + field + ")";
             case lte:
-                return " " + field + " <= NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+                return " " + field + " <= COALESCE(:" + field + "Param, " + field + ")";
             case lt:
-                return " " + field + " < NVL2(:" + field + "Param, :" + field + "Param, " + field + ")";
+                return " " + field + " < COALESCE(:" + field + "Param, " + field + ")";
             case gte_date:
-                return " trunc(" + field + ") >= NVL2(:" + field + "ParamDateGTE, TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
+                return " trunc(" + field + ") >= COALESCE(TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case lte_date:
-                return " trunc(" + field + ") <= NVL2(:" + field + "ParamDateLTE, TO_DATE(:" + field + "ParamDateLTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
+                return " trunc(" + field + ") <= COALESCE(TO_DATE(:" + field + "ParamDateLTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case isnull:
                 return " " + field + " is null";
             case isnotnull:
