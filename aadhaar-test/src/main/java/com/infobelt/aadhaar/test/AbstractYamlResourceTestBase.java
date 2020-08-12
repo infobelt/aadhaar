@@ -113,7 +113,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
     public void getAll()
             throws Exception {
         ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(getBaseUrl())
+                .get(getBaseUrl()).secure(true)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
@@ -137,7 +137,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
     @Test
     @WithMockUser(username = "admin")
     public void getById() throws Exception {
-        ResultActions result = mvc.perform(MockMvcRequestBuilders.get(getBaseUrl() + testId)
+        ResultActions result = mvc.perform(MockMvcRequestBuilders.get(getBaseUrl() + testId).secure(true)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
@@ -163,7 +163,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
         T update = getInstance("update");
 
         update.setId(testId);
-        ResultActions updateResult = mvc.perform(MockMvcRequestBuilders.put(getBaseUrl())
+        ResultActions updateResult = mvc.perform(MockMvcRequestBuilders.put(getBaseUrl()).secure(true)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -186,7 +186,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
         T revert = getInstance(defaultYamlType);
         revert.setId(testId);
 
-        ResultActions revertResult = mvc.perform(MockMvcRequestBuilders.put(getBaseUrl())
+        ResultActions revertResult = mvc.perform(MockMvcRequestBuilders.put(getBaseUrl()).secure(true)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -243,7 +243,7 @@ public abstract class AbstractYamlResourceTestBase<T extends AbstractEntity> {
         T businessLine = getInstance("delete");
         Long deleteId = serviceLayer.save(businessLine).getId();
 
-        mvc.perform(MockMvcRequestBuilders.delete(getBaseUrl() + "{id}", deleteId))
+        mvc.perform(MockMvcRequestBuilders.delete(getBaseUrl() + "{id}", deleteId).secure(true))
                 .andExpect(status().isOk());
 
         postDelete(businessLine);
