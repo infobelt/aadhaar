@@ -122,13 +122,13 @@ public class SqlUtil {
                     return " " + field + " like COALESCE(CONCAT('%', :" + field + "Param), " + field + ")";
                 }
             case gte:
-                return " " + field + " >= COALESCE(:" + field + "Param, " + field + ")";
+                return " " + field + " >= COALESCE(:" + field + "Param, to_char(" + field + "))";
             case gt:
-                return " " + field + " > COALESCE(:" + field + "Param, " + field + ")";
+                return " " + field + " > COALESCE(:" + field + "Param, to_char(" + field + "))";
             case lte:
-                return " " + field + " <= COALESCE(:" + field + "Param, " + field + ")";
+                return " " + field + " <= COALESCE(:" + field + "Param, to_char(" + field + "))";
             case lt:
-                return " " + field + " < COALESCE(:" + field + "Param, " + field + ")";
+                return " " + field + " < COALESCE(:" + field + "Param, to_char(" + field + "))";
             case gte_date:
                 return " trunc(" + field + ") >= COALESCE(TO_DATE(:" + field + "ParamDateGTE,'" + QUERY_DATE_PATTERN + "'), " + field + ")";
             case lte_date:
